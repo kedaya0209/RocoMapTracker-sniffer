@@ -1,0 +1,26 @@
+// Generated from com_base_types.proto
+package Next.pojo;
+
+import com.roco.sniffer.codec.Pojos;
+import com.roco.sniffer.codec.ProtoParser.ProtoField;
+import com.roco.sniffer.codec.ProtoParser;
+
+@SuppressWarnings("unused")
+public record Point(
+    Position pos,
+    Position dir
+) {
+    public static Point parseFrom(byte[] data) {
+        java.util.List<ProtoField> fields = ProtoParser.parse(data);
+        return new Point(
+            Pojos.readMessage(fields, 1) != null ? Next.pojo.Position.parseFrom(Pojos.readMessage(fields, 1)) : null,
+            Pojos.readMessage(fields, 2) != null ? Next.pojo.Position.parseFrom(Pojos.readMessage(fields, 2)) : null
+        );
+    }
+    public static Point parseFrom(java.util.List<ProtoField> fields) {
+        return new Point(
+            Pojos.readMessage(fields, 1) != null ? Next.pojo.Position.parseFrom(Pojos.readMessage(fields, 1)) : null,
+            Pojos.readMessage(fields, 2) != null ? Next.pojo.Position.parseFrom(Pojos.readMessage(fields, 2)) : null
+        );
+    }
+}

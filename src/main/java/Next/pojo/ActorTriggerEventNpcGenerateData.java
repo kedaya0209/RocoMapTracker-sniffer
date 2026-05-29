@@ -1,0 +1,29 @@
+// Generated from space_data.proto
+package Next.pojo;
+
+import com.roco.sniffer.codec.Pojos;
+import com.roco.sniffer.codec.ProtoParser.ProtoField;
+import com.roco.sniffer.codec.ProtoParser;
+
+@SuppressWarnings("unused")
+public record ActorTriggerEventNpcGenerateData(
+    int npcRefreshContentId,
+    int areaId,
+    int npcId
+) {
+    public static ActorTriggerEventNpcGenerateData parseFrom(byte[] data) {
+        java.util.List<ProtoField> fields = ProtoParser.parse(data);
+        return new ActorTriggerEventNpcGenerateData(
+            Pojos.readInt(fields, 1),
+            Pojos.readInt(fields, 2),
+            Pojos.readInt(fields, 3)
+        );
+    }
+    public static ActorTriggerEventNpcGenerateData parseFrom(java.util.List<ProtoField> fields) {
+        return new ActorTriggerEventNpcGenerateData(
+            Pojos.readInt(fields, 1),
+            Pojos.readInt(fields, 2),
+            Pojos.readInt(fields, 3)
+        );
+    }
+}

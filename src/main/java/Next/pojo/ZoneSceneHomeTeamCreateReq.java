@@ -1,0 +1,26 @@
+// Generated from zonesvr.proto
+package Next.pojo;
+
+import com.roco.sniffer.codec.Pojos;
+import com.roco.sniffer.codec.ProtoParser.ProtoField;
+import com.roco.sniffer.codec.ProtoParser;
+
+@SuppressWarnings("unused")
+public record ZoneSceneHomeTeamCreateReq(
+    int teamType,
+    int worldMapCfgId
+) {
+    public static ZoneSceneHomeTeamCreateReq parseFrom(byte[] data) {
+        java.util.List<ProtoField> fields = ProtoParser.parse(data);
+        return new ZoneSceneHomeTeamCreateReq(
+            Pojos.readInt(fields, 1, 0),
+            Pojos.readInt(fields, 2)
+        );
+    }
+    public static ZoneSceneHomeTeamCreateReq parseFrom(java.util.List<ProtoField> fields) {
+        return new ZoneSceneHomeTeamCreateReq(
+            Pojos.readInt(fields, 1, 0),
+            Pojos.readInt(fields, 2)
+        );
+    }
+}

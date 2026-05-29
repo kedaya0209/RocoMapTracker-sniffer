@@ -1,0 +1,126 @@
+// Generated from battle_data.proto
+package Next.pojo;
+
+import com.roco.sniffer.codec.Pojos;
+import com.roco.sniffer.codec.ProtoParser.ProtoField;
+import com.roco.sniffer.codec.ProtoParser;
+import java.util.List;
+
+@SuppressWarnings("unused")
+public record BattlePetSyncInfo(
+    int petId,
+    int hpChange,
+    int hpResult,
+    int shiledChange,
+    int shieldResult,
+    int attrType,
+    int attrChange,
+    int attrResult,
+    int originalDamage,
+    int damageChange,
+    int damageResult,
+    int buffId,
+    int buffStackChange,
+    int buffStackResult,
+    int stateBitChangePos,
+    List<Integer> stateBitResults,
+    int catchThresholdChange,
+    int catchThresholdResult,
+    int escapeThresholdChange,
+    int escapeThresholdResult,
+    int escapeCurValChange,
+    int escapeCurValResult,
+    int energyChange,
+    int energyResult,
+    int cheersTag,
+    int pos,
+    int instantKillChange,
+    int instantKillResult,
+    int reviveRound,
+    int reviveRounds,
+    int chargingSkillId,
+    int heightChange,
+    int heightResult,
+    List<BuffData_93_Skill> triggeredBuffs,
+    int mutationType
+) {
+    public static BattlePetSyncInfo parseFrom(byte[] data) {
+        java.util.List<ProtoField> fields = ProtoParser.parse(data);
+        return new BattlePetSyncInfo(
+            Pojos.readInt(fields, 1),
+            Pojos.readInt(fields, 2),
+            Pojos.readInt(fields, 3),
+            Pojos.readInt(fields, 6),
+            Pojos.readInt(fields, 7),
+            Pojos.readInt(fields, 8),
+            Pojos.readInt(fields, 9),
+            Pojos.readInt(fields, 10),
+            Pojos.readInt(fields, 11),
+            Pojos.readInt(fields, 12),
+            Pojos.readInt(fields, 13),
+            Pojos.readInt(fields, 14),
+            Pojos.readInt(fields, 15),
+            Pojos.readInt(fields, 16),
+            Pojos.readInt(fields, 17),
+            Pojos.readIntList(fields, 27),
+            Pojos.readInt(fields, 19),
+            Pojos.readInt(fields, 20),
+            Pojos.readInt(fields, 21),
+            Pojos.readInt(fields, 22),
+            Pojos.readInt(fields, 23),
+            Pojos.readInt(fields, 24),
+            Pojos.readInt(fields, 25),
+            Pojos.readInt(fields, 26),
+            Pojos.readInt(fields, 28),
+            Pojos.readInt(fields, 29),
+            Pojos.readInt(fields, 30),
+            Pojos.readInt(fields, 31),
+            Pojos.readInt(fields, 32),
+            Pojos.readInt(fields, 33),
+            Pojos.readInt(fields, 34),
+            Pojos.readInt(fields, 35),
+            Pojos.readInt(fields, 36),
+            Pojos.readMessageList(fields, 37).stream().map(Next.pojo.BuffData_93_Skill::parseFrom).toList(),
+            Pojos.readInt(fields, 38)
+        );
+    }
+    public static BattlePetSyncInfo parseFrom(java.util.List<ProtoField> fields) {
+        return new BattlePetSyncInfo(
+            Pojos.readInt(fields, 1),
+            Pojos.readInt(fields, 2),
+            Pojos.readInt(fields, 3),
+            Pojos.readInt(fields, 6),
+            Pojos.readInt(fields, 7),
+            Pojos.readInt(fields, 8),
+            Pojos.readInt(fields, 9),
+            Pojos.readInt(fields, 10),
+            Pojos.readInt(fields, 11),
+            Pojos.readInt(fields, 12),
+            Pojos.readInt(fields, 13),
+            Pojos.readInt(fields, 14),
+            Pojos.readInt(fields, 15),
+            Pojos.readInt(fields, 16),
+            Pojos.readInt(fields, 17),
+            Pojos.readIntList(fields, 27),
+            Pojos.readInt(fields, 19),
+            Pojos.readInt(fields, 20),
+            Pojos.readInt(fields, 21),
+            Pojos.readInt(fields, 22),
+            Pojos.readInt(fields, 23),
+            Pojos.readInt(fields, 24),
+            Pojos.readInt(fields, 25),
+            Pojos.readInt(fields, 26),
+            Pojos.readInt(fields, 28),
+            Pojos.readInt(fields, 29),
+            Pojos.readInt(fields, 30),
+            Pojos.readInt(fields, 31),
+            Pojos.readInt(fields, 32),
+            Pojos.readInt(fields, 33),
+            Pojos.readInt(fields, 34),
+            Pojos.readInt(fields, 35),
+            Pojos.readInt(fields, 36),
+            Pojos.readMessageList(fields, 37).stream().map(Next.pojo.BuffData_93_Skill::parseFrom).toList(),
+            Pojos.readInt(fields, 38)
+        );
+    }
+}

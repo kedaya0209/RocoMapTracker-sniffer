@@ -1,0 +1,41 @@
+// Generated from zonesvr.proto
+package Next.pojo;
+
+import com.roco.sniffer.codec.Pojos;
+import com.roco.sniffer.codec.ProtoParser.ProtoField;
+import com.roco.sniffer.codec.ProtoParser;
+
+@SuppressWarnings("unused")
+public record ZoneResonanceCarryonReq(
+    int petGid,
+    int resultCarryonIdx,
+    boolean isEquipped,
+    int resultItemGid,
+    int costItemGid,
+    int resultItemConfId,
+    int costItemConfId
+) {
+    public static ZoneResonanceCarryonReq parseFrom(byte[] data) {
+        java.util.List<ProtoField> fields = ProtoParser.parse(data);
+        return new ZoneResonanceCarryonReq(
+            Pojos.readInt(fields, 1),
+            Pojos.readInt(fields, 2),
+            Pojos.readBool(fields, 3),
+            Pojos.readInt(fields, 4),
+            Pojos.readInt(fields, 5),
+            Pojos.readInt(fields, 6),
+            Pojos.readInt(fields, 7)
+        );
+    }
+    public static ZoneResonanceCarryonReq parseFrom(java.util.List<ProtoField> fields) {
+        return new ZoneResonanceCarryonReq(
+            Pojos.readInt(fields, 1),
+            Pojos.readInt(fields, 2),
+            Pojos.readBool(fields, 3),
+            Pojos.readInt(fields, 4),
+            Pojos.readInt(fields, 5),
+            Pojos.readInt(fields, 6),
+            Pojos.readInt(fields, 7)
+        );
+    }
+}

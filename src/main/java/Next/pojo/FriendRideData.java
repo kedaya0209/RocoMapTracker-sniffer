@@ -1,0 +1,26 @@
+// Generated from space_data.proto
+package Next.pojo;
+
+import com.roco.sniffer.codec.Pojos;
+import com.roco.sniffer.codec.ProtoParser.ProtoField;
+import com.roco.sniffer.codec.ProtoParser;
+
+@SuppressWarnings("unused")
+public record FriendRideData(
+    int uin,
+    int gid
+) {
+    public static FriendRideData parseFrom(byte[] data) {
+        java.util.List<ProtoField> fields = ProtoParser.parse(data);
+        return new FriendRideData(
+            Pojos.readInt(fields, 1),
+            Pojos.readInt(fields, 2)
+        );
+    }
+    public static FriendRideData parseFrom(java.util.List<ProtoField> fields) {
+        return new FriendRideData(
+            Pojos.readInt(fields, 1),
+            Pojos.readInt(fields, 2)
+        );
+    }
+}

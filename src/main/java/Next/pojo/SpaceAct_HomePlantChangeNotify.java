@@ -1,0 +1,26 @@
+// Generated from space_action.proto
+package Next.pojo;
+
+import com.roco.sniffer.codec.Pojos;
+import com.roco.sniffer.codec.ProtoParser.ProtoField;
+import com.roco.sniffer.codec.ProtoParser;
+
+@SuppressWarnings("unused")
+public record SpaceAct_HomePlantChangeNotify(
+    long actorId,
+    CellInfo_HomePlantInfo homePlantInfo
+) {
+    public static SpaceAct_HomePlantChangeNotify parseFrom(byte[] data) {
+        java.util.List<ProtoField> fields = ProtoParser.parse(data);
+        return new SpaceAct_HomePlantChangeNotify(
+            Pojos.readLong(fields, 1),
+            Pojos.readMessage(fields, 3) != null ? Next.pojo.CellInfo_HomePlantInfo.parseFrom(Pojos.readMessage(fields, 3)) : null
+        );
+    }
+    public static SpaceAct_HomePlantChangeNotify parseFrom(java.util.List<ProtoField> fields) {
+        return new SpaceAct_HomePlantChangeNotify(
+            Pojos.readLong(fields, 1),
+            Pojos.readMessage(fields, 3) != null ? Next.pojo.CellInfo_HomePlantInfo.parseFrom(Pojos.readMessage(fields, 3)) : null
+        );
+    }
+}

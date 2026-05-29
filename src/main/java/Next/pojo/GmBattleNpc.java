@@ -1,0 +1,27 @@
+// Generated from com_battle.proto
+package Next.pojo;
+
+import com.roco.sniffer.codec.Pojos;
+import com.roco.sniffer.codec.ProtoParser.ProtoField;
+import com.roco.sniffer.codec.ProtoParser;
+import java.util.List;
+
+@SuppressWarnings("unused")
+public record GmBattleNpc(
+    int npcCfgId,
+    List<Integer> monsterIds
+) {
+    public static GmBattleNpc parseFrom(byte[] data) {
+        java.util.List<ProtoField> fields = ProtoParser.parse(data);
+        return new GmBattleNpc(
+            Pojos.readInt(fields, 1),
+            Pojos.readIntList(fields, 2)
+        );
+    }
+    public static GmBattleNpc parseFrom(java.util.List<ProtoField> fields) {
+        return new GmBattleNpc(
+            Pojos.readInt(fields, 1),
+            Pojos.readIntList(fields, 2)
+        );
+    }
+}

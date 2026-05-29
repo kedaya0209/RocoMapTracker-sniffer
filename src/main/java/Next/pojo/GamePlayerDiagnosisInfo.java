@@ -1,0 +1,38 @@
+// Generated from game_data.proto
+package Next.pojo;
+
+import com.roco.sniffer.codec.Pojos;
+import com.roco.sniffer.codec.ProtoParser.ProtoField;
+import com.roco.sniffer.codec.ProtoParser;
+
+@SuppressWarnings("unused")
+public record GamePlayerDiagnosisInfo(
+    int uin,
+    int hangTime,
+    int offlineTime,
+    int rttDelayMax,
+    int rttDelayAvg,
+    int disconnectedCount
+) {
+    public static GamePlayerDiagnosisInfo parseFrom(byte[] data) {
+        java.util.List<ProtoField> fields = ProtoParser.parse(data);
+        return new GamePlayerDiagnosisInfo(
+            Pojos.readInt(fields, 1),
+            Pojos.readInt(fields, 2),
+            Pojos.readInt(fields, 3),
+            Pojos.readInt(fields, 4),
+            Pojos.readInt(fields, 5),
+            Pojos.readInt(fields, 6)
+        );
+    }
+    public static GamePlayerDiagnosisInfo parseFrom(java.util.List<ProtoField> fields) {
+        return new GamePlayerDiagnosisInfo(
+            Pojos.readInt(fields, 1),
+            Pojos.readInt(fields, 2),
+            Pojos.readInt(fields, 3),
+            Pojos.readInt(fields, 4),
+            Pojos.readInt(fields, 5),
+            Pojos.readInt(fields, 6)
+        );
+    }
+}

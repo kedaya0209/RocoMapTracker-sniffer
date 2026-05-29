@@ -1,0 +1,27 @@
+// Generated from zonesvr.proto
+package Next.pojo;
+
+import com.roco.sniffer.codec.Pojos;
+import com.roco.sniffer.codec.ProtoParser.ProtoField;
+import com.roco.sniffer.codec.ProtoParser;
+import java.util.List;
+
+@SuppressWarnings("unused")
+public record ZoneCompleteAllPetTravelRsp(
+    RetInfo retInfo,
+    List<PetTravelInfo> travelInfo
+) {
+    public static ZoneCompleteAllPetTravelRsp parseFrom(byte[] data) {
+        java.util.List<ProtoField> fields = ProtoParser.parse(data);
+        return new ZoneCompleteAllPetTravelRsp(
+            Pojos.readMessage(fields, 1) != null ? Next.pojo.RetInfo.parseFrom(Pojos.readMessage(fields, 1)) : null,
+            Pojos.readMessageList(fields, 2).stream().map(Next.pojo.PetTravelInfo::parseFrom).toList()
+        );
+    }
+    public static ZoneCompleteAllPetTravelRsp parseFrom(java.util.List<ProtoField> fields) {
+        return new ZoneCompleteAllPetTravelRsp(
+            Pojos.readMessage(fields, 1) != null ? Next.pojo.RetInfo.parseFrom(Pojos.readMessage(fields, 1)) : null,
+            Pojos.readMessageList(fields, 2).stream().map(Next.pojo.PetTravelInfo::parseFrom).toList()
+        );
+    }
+}

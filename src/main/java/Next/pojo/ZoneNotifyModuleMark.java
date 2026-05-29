@@ -1,0 +1,23 @@
+// Generated from zonesvr_notify.proto
+package Next.pojo;
+
+import com.roco.sniffer.codec.Pojos;
+import com.roco.sniffer.codec.ProtoParser.ProtoField;
+import com.roco.sniffer.codec.ProtoParser;
+
+@SuppressWarnings("unused")
+public record ZoneNotifyModuleMark(
+    long moduleMark
+) {
+    public static ZoneNotifyModuleMark parseFrom(byte[] data) {
+        java.util.List<ProtoField> fields = ProtoParser.parse(data);
+        return new ZoneNotifyModuleMark(
+            Pojos.readLong(fields, 1)
+        );
+    }
+    public static ZoneNotifyModuleMark parseFrom(java.util.List<ProtoField> fields) {
+        return new ZoneNotifyModuleMark(
+            Pojos.readLong(fields, 1)
+        );
+    }
+}

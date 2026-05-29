@@ -1,0 +1,122 @@
+// Generated from friend_data.proto
+package Next.pojo;
+
+import com.roco.sniffer.codec.Pojos;
+import com.roco.sniffer.codec.ProtoParser.ProtoField;
+import com.roco.sniffer.codec.ProtoParser;
+
+@SuppressWarnings("unused")
+public record FriendRoleInfo(
+    String openid,
+    int uin,
+    byte[] name,
+    byte[] note,
+    byte[] headImg,
+    int level,
+    boolean online,
+    int gender,
+    int lastLogoutTime,
+    byte[] signature,
+    int worldLevel,
+    int sendVisitApplyTime,
+    int cardSkinSelected,
+    int registDate,
+    int source,
+    int cardIconSelected,
+    int cardLabelFirstSelected,
+    int cardLabelLastSelected,
+    int cardHandbookCollectNum,
+    int cardMusicId,
+    PlayerBattleBriefInfo battleBriefInfo,
+    FriendHomeInfo homeInfo,
+    long addFriendTime,
+    long pinnedTime,
+    int bpGiftGrade,
+    String cardBussinessCardUrl,
+    int friendType,
+    byte[] platNickName,
+    PlayerStartUpPrivilegeInfo startUpPrivilegeInfo,
+    int cliLoginChannel,
+    boolean isChatNodeUnlock,
+    int unlockedRelNodeNum,
+    FriendPositionInfo posInfo,
+    FriendVisitInfo visitInfo
+) {
+    public static FriendRoleInfo parseFrom(byte[] data) {
+        java.util.List<ProtoField> fields = ProtoParser.parse(data);
+        return new FriendRoleInfo(
+            Pojos.readString(fields, 1),
+            Pojos.readInt(fields, 2),
+            Pojos.readBytes(fields, 3),
+            Pojos.readBytes(fields, 4),
+            Pojos.readBytes(fields, 5),
+            Pojos.readInt(fields, 6),
+            Pojos.readBool(fields, 8),
+            Pojos.readInt(fields, 9),
+            Pojos.readInt(fields, 10),
+            Pojos.readBytes(fields, 11),
+            Pojos.readInt(fields, 12),
+            Pojos.readInt(fields, 13),
+            Pojos.readInt(fields, 14),
+            Pojos.readInt(fields, 15),
+            Pojos.readInt(fields, 16, 0),
+            Pojos.readInt(fields, 17),
+            Pojos.readInt(fields, 18),
+            Pojos.readInt(fields, 19),
+            Pojos.readInt(fields, 20),
+            Pojos.readInt(fields, 21),
+            Pojos.readMessage(fields, 23) != null ? Next.pojo.PlayerBattleBriefInfo.parseFrom(Pojos.readMessage(fields, 23)) : null,
+            Pojos.readMessage(fields, 24) != null ? Next.pojo.FriendHomeInfo.parseFrom(Pojos.readMessage(fields, 24)) : null,
+            Pojos.readLong(fields, 25),
+            Pojos.readLong(fields, 26),
+            Pojos.readInt(fields, 27, 0),
+            Pojos.readString(fields, 28),
+            Pojos.readInt(fields, 29),
+            Pojos.readBytes(fields, 30),
+            Pojos.readMessage(fields, 31) != null ? Next.pojo.PlayerStartUpPrivilegeInfo.parseFrom(Pojos.readMessage(fields, 31)) : null,
+            Pojos.readInt(fields, 32),
+            Pojos.readBool(fields, 33),
+            Pojos.readInt(fields, 34),
+            Pojos.readMessage(fields, 35) != null ? Next.pojo.FriendPositionInfo.parseFrom(Pojos.readMessage(fields, 35)) : null,
+            Pojos.readMessage(fields, 36) != null ? Next.pojo.FriendVisitInfo.parseFrom(Pojos.readMessage(fields, 36)) : null
+        );
+    }
+    public static FriendRoleInfo parseFrom(java.util.List<ProtoField> fields) {
+        return new FriendRoleInfo(
+            Pojos.readString(fields, 1),
+            Pojos.readInt(fields, 2),
+            Pojos.readBytes(fields, 3),
+            Pojos.readBytes(fields, 4),
+            Pojos.readBytes(fields, 5),
+            Pojos.readInt(fields, 6),
+            Pojos.readBool(fields, 8),
+            Pojos.readInt(fields, 9),
+            Pojos.readInt(fields, 10),
+            Pojos.readBytes(fields, 11),
+            Pojos.readInt(fields, 12),
+            Pojos.readInt(fields, 13),
+            Pojos.readInt(fields, 14),
+            Pojos.readInt(fields, 15),
+            Pojos.readInt(fields, 16, 0),
+            Pojos.readInt(fields, 17),
+            Pojos.readInt(fields, 18),
+            Pojos.readInt(fields, 19),
+            Pojos.readInt(fields, 20),
+            Pojos.readInt(fields, 21),
+            Pojos.readMessage(fields, 23) != null ? Next.pojo.PlayerBattleBriefInfo.parseFrom(Pojos.readMessage(fields, 23)) : null,
+            Pojos.readMessage(fields, 24) != null ? Next.pojo.FriendHomeInfo.parseFrom(Pojos.readMessage(fields, 24)) : null,
+            Pojos.readLong(fields, 25),
+            Pojos.readLong(fields, 26),
+            Pojos.readInt(fields, 27, 0),
+            Pojos.readString(fields, 28),
+            Pojos.readInt(fields, 29),
+            Pojos.readBytes(fields, 30),
+            Pojos.readMessage(fields, 31) != null ? Next.pojo.PlayerStartUpPrivilegeInfo.parseFrom(Pojos.readMessage(fields, 31)) : null,
+            Pojos.readInt(fields, 32),
+            Pojos.readBool(fields, 33),
+            Pojos.readInt(fields, 34),
+            Pojos.readMessage(fields, 35) != null ? Next.pojo.FriendPositionInfo.parseFrom(Pojos.readMessage(fields, 35)) : null,
+            Pojos.readMessage(fields, 36) != null ? Next.pojo.FriendVisitInfo.parseFrom(Pojos.readMessage(fields, 36)) : null
+        );
+    }
+}

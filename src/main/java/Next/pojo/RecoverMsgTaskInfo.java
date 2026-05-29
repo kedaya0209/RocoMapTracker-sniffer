@@ -1,0 +1,27 @@
+// Generated from com_rpc.proto
+package Next.pojo;
+
+import com.roco.sniffer.codec.Pojos;
+import com.roco.sniffer.codec.ProtoParser.ProtoField;
+import com.roco.sniffer.codec.ProtoParser;
+import java.util.List;
+
+@SuppressWarnings("unused")
+public record RecoverMsgTaskInfo(
+    SceneTaskActionList actionList,
+    List<DBTaskTargetData> taskTarget
+) {
+    public static RecoverMsgTaskInfo parseFrom(byte[] data) {
+        java.util.List<ProtoField> fields = ProtoParser.parse(data);
+        return new RecoverMsgTaskInfo(
+            Pojos.readMessage(fields, 1) != null ? Next.pojo.SceneTaskActionList.parseFrom(Pojos.readMessage(fields, 1)) : null,
+            Pojos.readMessageList(fields, 2).stream().map(Next.pojo.DBTaskTargetData::parseFrom).toList()
+        );
+    }
+    public static RecoverMsgTaskInfo parseFrom(java.util.List<ProtoField> fields) {
+        return new RecoverMsgTaskInfo(
+            Pojos.readMessage(fields, 1) != null ? Next.pojo.SceneTaskActionList.parseFrom(Pojos.readMessage(fields, 1)) : null,
+            Pojos.readMessageList(fields, 2).stream().map(Next.pojo.DBTaskTargetData::parseFrom).toList()
+        );
+    }
+}

@@ -1,0 +1,126 @@
+// Generated from com_pet.proto
+package Next.pojo;
+
+import com.roco.sniffer.codec.Pojos;
+import com.roco.sniffer.codec.ProtoParser.ProtoField;
+import com.roco.sniffer.codec.ProtoParser;
+import java.util.List;
+
+@SuppressWarnings("unused")
+public record PetBriefInfo(
+    int gid,
+    int confId,
+    byte[] name,
+    int infoId,
+    int nameSrc,
+    List<Integer> skillDamType,
+    int nature,
+    int gender,
+    int exp,
+    int level,
+    PetSkillInfo skill,
+    PetAttributeInfo attributeInfo,
+    int baseConfId,
+    int height,
+    int weight,
+    int lastBreakthroughLv,
+    boolean isFirstCatch,
+    int mutationType,
+    int bloodId,
+    int talentRank,
+    int caughtCamp,
+    int attrVersion,
+    int skillVersion,
+    int specialityVersion,
+    int growTimes,
+    int wearMedalConfId,
+    PetAdditionalNewAttrList attributeNewInfo,
+    int partnerMark,
+    List<Integer> customMedalConfId,
+    int specialityId,
+    List<Integer> realSpecialityIds,
+    GlassInfo glassInfo,
+    TogetherCatchInfo togetherCatchInfo,
+    int inspireLv,
+    int patchVersion
+) {
+    public static PetBriefInfo parseFrom(byte[] data) {
+        java.util.List<ProtoField> fields = ProtoParser.parse(data);
+        return new PetBriefInfo(
+            Pojos.readInt(fields, 1),
+            Pojos.readInt(fields, 2),
+            Pojos.readBytes(fields, 3),
+            Pojos.readInt(fields, 4),
+            Pojos.readInt(fields, 5, 0),
+            Pojos.readIntList(fields, 6),
+            Pojos.readInt(fields, 7),
+            Pojos.readInt(fields, 8),
+            Pojos.readInt(fields, 9),
+            Pojos.readInt(fields, 10),
+            Pojos.readMessage(fields, 12) != null ? Next.pojo.PetSkillInfo.parseFrom(Pojos.readMessage(fields, 12)) : null,
+            Pojos.readMessage(fields, 14) != null ? Next.pojo.PetAttributeInfo.parseFrom(Pojos.readMessage(fields, 14)) : null,
+            Pojos.readInt(fields, 15),
+            Pojos.readInt(fields, 26),
+            Pojos.readInt(fields, 27),
+            Pojos.readInt(fields, 30),
+            Pojos.readBool(fields, 39),
+            Pojos.readInt(fields, 45),
+            Pojos.readInt(fields, 47),
+            Pojos.readInt(fields, 55),
+            Pojos.readInt(fields, 58),
+            Pojos.readInt(fields, 60),
+            Pojos.readInt(fields, 61),
+            Pojos.readInt(fields, 63),
+            Pojos.readInt(fields, 66),
+            Pojos.readInt(fields, 73),
+            Pojos.readMessage(fields, 75) != null ? Next.pojo.PetAdditionalNewAttrList.parseFrom(Pojos.readMessage(fields, 75)) : null,
+            Pojos.readInt(fields, 78, 0),
+            Pojos.readIntList(fields, 80),
+            Pojos.readInt(fields, 82),
+            Pojos.readIntList(fields, 83),
+            Pojos.readMessage(fields, 86) != null ? Next.pojo.GlassInfo.parseFrom(Pojos.readMessage(fields, 86)) : null,
+            Pojos.readMessage(fields, 90) != null ? Next.pojo.TogetherCatchInfo.parseFrom(Pojos.readMessage(fields, 90)) : null,
+            Pojos.readInt(fields, 96),
+            Pojos.readInt(fields, 99)
+        );
+    }
+    public static PetBriefInfo parseFrom(java.util.List<ProtoField> fields) {
+        return new PetBriefInfo(
+            Pojos.readInt(fields, 1),
+            Pojos.readInt(fields, 2),
+            Pojos.readBytes(fields, 3),
+            Pojos.readInt(fields, 4),
+            Pojos.readInt(fields, 5, 0),
+            Pojos.readIntList(fields, 6),
+            Pojos.readInt(fields, 7),
+            Pojos.readInt(fields, 8),
+            Pojos.readInt(fields, 9),
+            Pojos.readInt(fields, 10),
+            Pojos.readMessage(fields, 12) != null ? Next.pojo.PetSkillInfo.parseFrom(Pojos.readMessage(fields, 12)) : null,
+            Pojos.readMessage(fields, 14) != null ? Next.pojo.PetAttributeInfo.parseFrom(Pojos.readMessage(fields, 14)) : null,
+            Pojos.readInt(fields, 15),
+            Pojos.readInt(fields, 26),
+            Pojos.readInt(fields, 27),
+            Pojos.readInt(fields, 30),
+            Pojos.readBool(fields, 39),
+            Pojos.readInt(fields, 45),
+            Pojos.readInt(fields, 47),
+            Pojos.readInt(fields, 55),
+            Pojos.readInt(fields, 58),
+            Pojos.readInt(fields, 60),
+            Pojos.readInt(fields, 61),
+            Pojos.readInt(fields, 63),
+            Pojos.readInt(fields, 66),
+            Pojos.readInt(fields, 73),
+            Pojos.readMessage(fields, 75) != null ? Next.pojo.PetAdditionalNewAttrList.parseFrom(Pojos.readMessage(fields, 75)) : null,
+            Pojos.readInt(fields, 78, 0),
+            Pojos.readIntList(fields, 80),
+            Pojos.readInt(fields, 82),
+            Pojos.readIntList(fields, 83),
+            Pojos.readMessage(fields, 86) != null ? Next.pojo.GlassInfo.parseFrom(Pojos.readMessage(fields, 86)) : null,
+            Pojos.readMessage(fields, 90) != null ? Next.pojo.TogetherCatchInfo.parseFrom(Pojos.readMessage(fields, 90)) : null,
+            Pojos.readInt(fields, 96),
+            Pojos.readInt(fields, 99)
+        );
+    }
+}

@@ -1,0 +1,29 @@
+// Generated from zonesvr.proto
+package Next.pojo;
+
+import com.roco.sniffer.codec.Pojos;
+import com.roco.sniffer.codec.ProtoParser.ProtoField;
+import com.roco.sniffer.codec.ProtoParser;
+
+@SuppressWarnings("unused")
+public record ZoneSceneChangeMoveModeReq(
+    int moveId,
+    int stamina,
+    int needStartCost
+) {
+    public static ZoneSceneChangeMoveModeReq parseFrom(byte[] data) {
+        java.util.List<ProtoField> fields = ProtoParser.parse(data);
+        return new ZoneSceneChangeMoveModeReq(
+            Pojos.readInt(fields, 1),
+            Pojos.readInt(fields, 2),
+            Pojos.readInt(fields, 3)
+        );
+    }
+    public static ZoneSceneChangeMoveModeReq parseFrom(java.util.List<ProtoField> fields) {
+        return new ZoneSceneChangeMoveModeReq(
+            Pojos.readInt(fields, 1),
+            Pojos.readInt(fields, 2),
+            Pojos.readInt(fields, 3)
+        );
+    }
+}

@@ -1,0 +1,24 @@
+// Generated from com_account.proto
+package Next.pojo;
+
+import com.roco.sniffer.codec.Pojos;
+import com.roco.sniffer.codec.ProtoParser.ProtoField;
+import com.roco.sniffer.codec.ProtoParser;
+import java.util.List;
+
+@SuppressWarnings("unused")
+public record OpenIdList(
+    List<byte[]> openid
+) {
+    public static OpenIdList parseFrom(byte[] data) {
+        java.util.List<ProtoField> fields = ProtoParser.parse(data);
+        return new OpenIdList(
+            Pojos.readBytesList(fields, 1)
+        );
+    }
+    public static OpenIdList parseFrom(java.util.List<ProtoField> fields) {
+        return new OpenIdList(
+            Pojos.readBytesList(fields, 1)
+        );
+    }
+}

@@ -1,0 +1,16 @@
+// Generated from zonesvr.proto
+package Next.pojo;
+
+import com.roco.sniffer.codec.Pojos;
+import com.roco.sniffer.codec.ProtoParser.ProtoField;
+import com.roco.sniffer.codec.ProtoParser;
+
+@SuppressWarnings("unused")
+public record ZoneFeedVideoEndReq() {
+    public static ZoneFeedVideoEndReq parseFrom(byte[] data) {
+        return new ZoneFeedVideoEndReq();
+    }
+    public static ZoneFeedVideoEndReq parseFrom(java.util.List<ProtoField> fields) {
+        return new ZoneFeedVideoEndReq();
+    }
+}

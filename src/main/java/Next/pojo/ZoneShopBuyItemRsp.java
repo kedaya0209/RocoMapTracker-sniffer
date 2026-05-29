@@ -1,0 +1,33 @@
+// Generated from zonesvr.proto
+package Next.pojo;
+
+import com.roco.sniffer.codec.Pojos;
+import com.roco.sniffer.codec.ProtoParser.ProtoField;
+import com.roco.sniffer.codec.ProtoParser;
+import java.util.List;
+
+@SuppressWarnings("unused")
+public record ZoneShopBuyItemRsp(
+    RetInfo retInfo,
+    int shopId,
+    List<ShopBuyItemInfo> buyItemInfo,
+    ShopData shopData
+) {
+    public static ZoneShopBuyItemRsp parseFrom(byte[] data) {
+        java.util.List<ProtoField> fields = ProtoParser.parse(data);
+        return new ZoneShopBuyItemRsp(
+            Pojos.readMessage(fields, 1) != null ? Next.pojo.RetInfo.parseFrom(Pojos.readMessage(fields, 1)) : null,
+            Pojos.readInt(fields, 2),
+            Pojos.readMessageList(fields, 3).stream().map(Next.pojo.ShopBuyItemInfo::parseFrom).toList(),
+            Pojos.readMessage(fields, 4) != null ? Next.pojo.ShopData.parseFrom(Pojos.readMessage(fields, 4)) : null
+        );
+    }
+    public static ZoneShopBuyItemRsp parseFrom(java.util.List<ProtoField> fields) {
+        return new ZoneShopBuyItemRsp(
+            Pojos.readMessage(fields, 1) != null ? Next.pojo.RetInfo.parseFrom(Pojos.readMessage(fields, 1)) : null,
+            Pojos.readInt(fields, 2),
+            Pojos.readMessageList(fields, 3).stream().map(Next.pojo.ShopBuyItemInfo::parseFrom).toList(),
+            Pojos.readMessage(fields, 4) != null ? Next.pojo.ShopData.parseFrom(Pojos.readMessage(fields, 4)) : null
+        );
+    }
+}

@@ -1,0 +1,24 @@
+// Generated from com_home.proto
+package Next.pojo;
+
+import com.roco.sniffer.codec.Pojos;
+import com.roco.sniffer.codec.ProtoParser.ProtoField;
+import com.roco.sniffer.codec.ProtoParser;
+import java.util.List;
+
+@SuppressWarnings("unused")
+public record HomeVisitHistoryInfo(
+    List<HomeVisitRecord> visitRecords
+) {
+    public static HomeVisitHistoryInfo parseFrom(byte[] data) {
+        java.util.List<ProtoField> fields = ProtoParser.parse(data);
+        return new HomeVisitHistoryInfo(
+            Pojos.readMessageList(fields, 1).stream().map(Next.pojo.HomeVisitRecord::parseFrom).toList()
+        );
+    }
+    public static HomeVisitHistoryInfo parseFrom(java.util.List<ProtoField> fields) {
+        return new HomeVisitHistoryInfo(
+            Pojos.readMessageList(fields, 1).stream().map(Next.pojo.HomeVisitRecord::parseFrom).toList()
+        );
+    }
+}

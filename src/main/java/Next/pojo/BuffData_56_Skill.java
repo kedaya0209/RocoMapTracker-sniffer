@@ -1,0 +1,26 @@
+// Generated from battle_buff_data.proto
+package Next.pojo;
+
+import com.roco.sniffer.codec.Pojos;
+import com.roco.sniffer.codec.ProtoParser.ProtoField;
+import com.roco.sniffer.codec.ProtoParser;
+
+@SuppressWarnings("unused")
+public record BuffData_56_Skill(
+    int oldSkillId,
+    int newSkillId
+) {
+    public static BuffData_56_Skill parseFrom(byte[] data) {
+        java.util.List<ProtoField> fields = ProtoParser.parse(data);
+        return new BuffData_56_Skill(
+            Pojos.readInt(fields, 1),
+            Pojos.readInt(fields, 2)
+        );
+    }
+    public static BuffData_56_Skill parseFrom(java.util.List<ProtoField> fields) {
+        return new BuffData_56_Skill(
+            Pojos.readInt(fields, 1),
+            Pojos.readInt(fields, 2)
+        );
+    }
+}

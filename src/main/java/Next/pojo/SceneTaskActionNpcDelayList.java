@@ -1,0 +1,24 @@
+// Generated from com_task.proto
+package Next.pojo;
+
+import com.roco.sniffer.codec.Pojos;
+import com.roco.sniffer.codec.ProtoParser.ProtoField;
+import com.roco.sniffer.codec.ProtoParser;
+import java.util.List;
+
+@SuppressWarnings("unused")
+public record SceneTaskActionNpcDelayList(
+    List<SceneTaskActionNpcDelayInfo> actions
+) {
+    public static SceneTaskActionNpcDelayList parseFrom(byte[] data) {
+        java.util.List<ProtoField> fields = ProtoParser.parse(data);
+        return new SceneTaskActionNpcDelayList(
+            Pojos.readMessageList(fields, 2).stream().map(Next.pojo.SceneTaskActionNpcDelayInfo::parseFrom).toList()
+        );
+    }
+    public static SceneTaskActionNpcDelayList parseFrom(java.util.List<ProtoField> fields) {
+        return new SceneTaskActionNpcDelayList(
+            Pojos.readMessageList(fields, 2).stream().map(Next.pojo.SceneTaskActionNpcDelayInfo::parseFrom).toList()
+        );
+    }
+}

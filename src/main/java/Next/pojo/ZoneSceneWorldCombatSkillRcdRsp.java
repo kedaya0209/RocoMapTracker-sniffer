@@ -1,0 +1,23 @@
+// Generated from zonesvr.proto
+package Next.pojo;
+
+import com.roco.sniffer.codec.Pojos;
+import com.roco.sniffer.codec.ProtoParser.ProtoField;
+import com.roco.sniffer.codec.ProtoParser;
+
+@SuppressWarnings("unused")
+public record ZoneSceneWorldCombatSkillRcdRsp(
+    RetInfo retInfo
+) {
+    public static ZoneSceneWorldCombatSkillRcdRsp parseFrom(byte[] data) {
+        java.util.List<ProtoField> fields = ProtoParser.parse(data);
+        return new ZoneSceneWorldCombatSkillRcdRsp(
+            Pojos.readMessage(fields, 1) != null ? Next.pojo.RetInfo.parseFrom(Pojos.readMessage(fields, 1)) : null
+        );
+    }
+    public static ZoneSceneWorldCombatSkillRcdRsp parseFrom(java.util.List<ProtoField> fields) {
+        return new ZoneSceneWorldCombatSkillRcdRsp(
+            Pojos.readMessage(fields, 1) != null ? Next.pojo.RetInfo.parseFrom(Pojos.readMessage(fields, 1)) : null
+        );
+    }
+}

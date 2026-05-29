@@ -1,0 +1,48 @@
+// Generated from zonesvr.proto
+package Next.pojo;
+
+import com.roco.sniffer.codec.Pojos;
+import com.roco.sniffer.codec.ProtoParser.ProtoField;
+import com.roco.sniffer.codec.ProtoParser;
+import java.util.List;
+
+@SuppressWarnings("unused")
+public record ZoneOpenMagicBookSheetRsp(
+    RetInfo retInfo,
+    int chapterId,
+    boolean rewarded,
+    List<PlayerTaskInfo> chapterTaskList,
+    List<PlayerTaskInfo> investTaskList,
+    List<PlayerTaskInfo> clueTaskList,
+    List<PlayerTaskInfo> topicTaskList,
+    int remainTime,
+    int specialRewardItem
+) {
+    public static ZoneOpenMagicBookSheetRsp parseFrom(byte[] data) {
+        java.util.List<ProtoField> fields = ProtoParser.parse(data);
+        return new ZoneOpenMagicBookSheetRsp(
+            Pojos.readMessage(fields, 1) != null ? Next.pojo.RetInfo.parseFrom(Pojos.readMessage(fields, 1)) : null,
+            Pojos.readInt(fields, 2),
+            Pojos.readBool(fields, 3),
+            Pojos.readMessageList(fields, 5).stream().map(Next.pojo.PlayerTaskInfo::parseFrom).toList(),
+            Pojos.readMessageList(fields, 6).stream().map(Next.pojo.PlayerTaskInfo::parseFrom).toList(),
+            Pojos.readMessageList(fields, 7).stream().map(Next.pojo.PlayerTaskInfo::parseFrom).toList(),
+            Pojos.readMessageList(fields, 8).stream().map(Next.pojo.PlayerTaskInfo::parseFrom).toList(),
+            Pojos.readInt(fields, 9),
+            Pojos.readInt(fields, 10)
+        );
+    }
+    public static ZoneOpenMagicBookSheetRsp parseFrom(java.util.List<ProtoField> fields) {
+        return new ZoneOpenMagicBookSheetRsp(
+            Pojos.readMessage(fields, 1) != null ? Next.pojo.RetInfo.parseFrom(Pojos.readMessage(fields, 1)) : null,
+            Pojos.readInt(fields, 2),
+            Pojos.readBool(fields, 3),
+            Pojos.readMessageList(fields, 5).stream().map(Next.pojo.PlayerTaskInfo::parseFrom).toList(),
+            Pojos.readMessageList(fields, 6).stream().map(Next.pojo.PlayerTaskInfo::parseFrom).toList(),
+            Pojos.readMessageList(fields, 7).stream().map(Next.pojo.PlayerTaskInfo::parseFrom).toList(),
+            Pojos.readMessageList(fields, 8).stream().map(Next.pojo.PlayerTaskInfo::parseFrom).toList(),
+            Pojos.readInt(fields, 9),
+            Pojos.readInt(fields, 10)
+        );
+    }
+}

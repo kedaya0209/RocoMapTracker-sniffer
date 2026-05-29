@@ -1,0 +1,27 @@
+// Generated from com_pet_skill.proto
+package Next.pojo;
+
+import com.roco.sniffer.codec.Pojos;
+import com.roco.sniffer.codec.ProtoParser.ProtoField;
+import com.roco.sniffer.codec.ProtoParser;
+import java.util.List;
+
+@SuppressWarnings("unused")
+public record PetRemoveAura(
+    PetPosition petPosInfo,
+    List<BattleRemoveAuraInfo> removeInfo
+) {
+    public static PetRemoveAura parseFrom(byte[] data) {
+        java.util.List<ProtoField> fields = ProtoParser.parse(data);
+        return new PetRemoveAura(
+            Pojos.readMessage(fields, 1) != null ? Next.pojo.PetPosition.parseFrom(Pojos.readMessage(fields, 1)) : null,
+            Pojos.readMessageList(fields, 2).stream().map(Next.pojo.BattleRemoveAuraInfo::parseFrom).toList()
+        );
+    }
+    public static PetRemoveAura parseFrom(java.util.List<ProtoField> fields) {
+        return new PetRemoveAura(
+            Pojos.readMessage(fields, 1) != null ? Next.pojo.PetPosition.parseFrom(Pojos.readMessage(fields, 1)) : null,
+            Pojos.readMessageList(fields, 2).stream().map(Next.pojo.BattleRemoveAuraInfo::parseFrom).toList()
+        );
+    }
+}

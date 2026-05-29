@@ -1,0 +1,29 @@
+// Generated from zonesvr_notify.proto
+package Next.pojo;
+
+import com.roco.sniffer.codec.Pojos;
+import com.roco.sniffer.codec.ProtoParser.ProtoField;
+import com.roco.sniffer.codec.ProtoParser;
+
+@SuppressWarnings("unused")
+public record ZoneMoneyInfoChangeNotity(
+    MidasMoneyInfo data,
+    RetInfo retInfo,
+    int couponChangeVal
+) {
+    public static ZoneMoneyInfoChangeNotity parseFrom(byte[] data) {
+        java.util.List<ProtoField> fields = ProtoParser.parse(data);
+        return new ZoneMoneyInfoChangeNotity(
+            Pojos.readMessage(fields, 1) != null ? Next.pojo.MidasMoneyInfo.parseFrom(Pojos.readMessage(fields, 1)) : null,
+            Pojos.readMessage(fields, 2) != null ? Next.pojo.RetInfo.parseFrom(Pojos.readMessage(fields, 2)) : null,
+            Pojos.readInt(fields, 3)
+        );
+    }
+    public static ZoneMoneyInfoChangeNotity parseFrom(java.util.List<ProtoField> fields) {
+        return new ZoneMoneyInfoChangeNotity(
+            Pojos.readMessage(fields, 1) != null ? Next.pojo.MidasMoneyInfo.parseFrom(Pojos.readMessage(fields, 1)) : null,
+            Pojos.readMessage(fields, 2) != null ? Next.pojo.RetInfo.parseFrom(Pojos.readMessage(fields, 2)) : null,
+            Pojos.readInt(fields, 3)
+        );
+    }
+}

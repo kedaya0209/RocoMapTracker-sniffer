@@ -1,0 +1,26 @@
+// Generated from com_player.proto
+package Next.pojo;
+
+import com.roco.sniffer.codec.Pojos;
+import com.roco.sniffer.codec.ProtoParser.ProtoField;
+import com.roco.sniffer.codec.ProtoParser;
+
+@SuppressWarnings("unused")
+public record DailySendMailItem(
+    int id,
+    int mailSendTimes
+) {
+    public static DailySendMailItem parseFrom(byte[] data) {
+        java.util.List<ProtoField> fields = ProtoParser.parse(data);
+        return new DailySendMailItem(
+            Pojos.readInt(fields, 1),
+            Pojos.readInt(fields, 4)
+        );
+    }
+    public static DailySendMailItem parseFrom(java.util.List<ProtoField> fields) {
+        return new DailySendMailItem(
+            Pojos.readInt(fields, 1),
+            Pojos.readInt(fields, 4)
+        );
+    }
+}

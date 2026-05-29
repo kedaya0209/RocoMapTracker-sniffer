@@ -1,0 +1,26 @@
+// Generated from com_misc.proto
+package Next.pojo;
+
+import com.roco.sniffer.codec.Pojos;
+import com.roco.sniffer.codec.ProtoParser.ProtoField;
+import com.roco.sniffer.codec.ProtoParser;
+
+@SuppressWarnings("unused")
+public record GeneralColumnFieldInfo(
+    String columnName,
+    int columnType
+) {
+    public static GeneralColumnFieldInfo parseFrom(byte[] data) {
+        java.util.List<ProtoField> fields = ProtoParser.parse(data);
+        return new GeneralColumnFieldInfo(
+            Pojos.readString(fields, 1),
+            Pojos.readInt(fields, 2, 0)
+        );
+    }
+    public static GeneralColumnFieldInfo parseFrom(java.util.List<ProtoField> fields) {
+        return new GeneralColumnFieldInfo(
+            Pojos.readString(fields, 1),
+            Pojos.readInt(fields, 2, 0)
+        );
+    }
+}

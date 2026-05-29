@@ -1,0 +1,26 @@
+// Generated from com_player_social_info.proto
+package Next.pojo;
+
+import com.roco.sniffer.codec.Pojos;
+import com.roco.sniffer.codec.ProtoParser.ProtoField;
+import com.roco.sniffer.codec.ProtoParser;
+
+@SuppressWarnings("unused")
+public record PlayerSocialOnlineInfo(
+    int onlineState,
+    int logoutTime
+) {
+    public static PlayerSocialOnlineInfo parseFrom(byte[] data) {
+        java.util.List<ProtoField> fields = ProtoParser.parse(data);
+        return new PlayerSocialOnlineInfo(
+            Pojos.readInt(fields, 1),
+            Pojos.readInt(fields, 2)
+        );
+    }
+    public static PlayerSocialOnlineInfo parseFrom(java.util.List<ProtoField> fields) {
+        return new PlayerSocialOnlineInfo(
+            Pojos.readInt(fields, 1),
+            Pojos.readInt(fields, 2)
+        );
+    }
+}

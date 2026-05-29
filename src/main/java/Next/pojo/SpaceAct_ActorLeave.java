@@ -1,0 +1,24 @@
+// Generated from space_action.proto
+package Next.pojo;
+
+import com.roco.sniffer.codec.Pojos;
+import com.roco.sniffer.codec.ProtoParser.ProtoField;
+import com.roco.sniffer.codec.ProtoParser;
+import java.util.List;
+
+@SuppressWarnings("unused")
+public record SpaceAct_ActorLeave(
+    List<Long> actorIds
+) {
+    public static SpaceAct_ActorLeave parseFrom(byte[] data) {
+        java.util.List<ProtoField> fields = ProtoParser.parse(data);
+        return new SpaceAct_ActorLeave(
+            Pojos.readLongList(fields, 1)
+        );
+    }
+    public static SpaceAct_ActorLeave parseFrom(java.util.List<ProtoField> fields) {
+        return new SpaceAct_ActorLeave(
+            Pojos.readLongList(fields, 1)
+        );
+    }
+}

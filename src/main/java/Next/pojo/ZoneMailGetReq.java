@@ -1,0 +1,23 @@
+// Generated from zone_mail.proto
+package Next.pojo;
+
+import com.roco.sniffer.codec.Pojos;
+import com.roco.sniffer.codec.ProtoParser.ProtoField;
+import com.roco.sniffer.codec.ProtoParser;
+
+@SuppressWarnings("unused")
+public record ZoneMailGetReq(
+    long mailGid
+) {
+    public static ZoneMailGetReq parseFrom(byte[] data) {
+        java.util.List<ProtoField> fields = ProtoParser.parse(data);
+        return new ZoneMailGetReq(
+            Pojos.readLong(fields, 1)
+        );
+    }
+    public static ZoneMailGetReq parseFrom(java.util.List<ProtoField> fields) {
+        return new ZoneMailGetReq(
+            Pojos.readLong(fields, 1)
+        );
+    }
+}

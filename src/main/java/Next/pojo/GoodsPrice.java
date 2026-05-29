@@ -1,0 +1,29 @@
+// Generated from com_shop.proto
+package Next.pojo;
+
+import com.roco.sniffer.codec.Pojos;
+import com.roco.sniffer.codec.ProtoParser.ProtoField;
+import com.roco.sniffer.codec.ProtoParser;
+
+@SuppressWarnings("unused")
+public record GoodsPrice(
+    int num,
+    int goodsType,
+    int goodsId
+) {
+    public static GoodsPrice parseFrom(byte[] data) {
+        java.util.List<ProtoField> fields = ProtoParser.parse(data);
+        return new GoodsPrice(
+            Pojos.readInt(fields, 2),
+            Pojos.readInt(fields, 3, 0),
+            Pojos.readInt(fields, 4)
+        );
+    }
+    public static GoodsPrice parseFrom(java.util.List<ProtoField> fields) {
+        return new GoodsPrice(
+            Pojos.readInt(fields, 2),
+            Pojos.readInt(fields, 3, 0),
+            Pojos.readInt(fields, 4)
+        );
+    }
+}
