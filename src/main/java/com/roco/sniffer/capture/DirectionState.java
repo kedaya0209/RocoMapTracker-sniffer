@@ -2,6 +2,7 @@ package com.roco.sniffer.capture;
 
 import com.roco.sniffer.codec.Be21Parser;
 import com.roco.sniffer.codec.Be21Packet;
+import com.roco.sniffer.codec.Direction;
 
 import java.io.ByteArrayOutputStream;
 import java.util.*;
@@ -24,7 +25,7 @@ public class DirectionState {
     /** 乱序缓存上限 8MB，超过则丢弃最远的段 */
     private static final int MAX_PENDING_BYTES = 8 * 1024 * 1024;
 
-    private final String direction;
+    private final Direction direction;
 
     /** 主字节流缓冲区 */
     private ByteArrayOutputStream buffer = new ByteArrayOutputStream();
@@ -43,7 +44,7 @@ public class DirectionState {
     /** 乱序缓存总字节数 */
     private int pendingBytes = 0;
 
-    public DirectionState(String direction) {
+    public DirectionState(Direction direction) {
         this.direction = direction;
     }
 
@@ -284,11 +285,4 @@ public class DirectionState {
         return sb.toString();
     }
 
-    // ── getters for testing ──
-
-    public int bufferSize() { return buffer.size(); }
-    public int parseOffset() { return parseOffset; }
-    public long streamBase() { return streamBase; }
-    public int pendingCount() { return pending.size(); }
-    public int pendingBytes() { return pendingBytes; }
 }

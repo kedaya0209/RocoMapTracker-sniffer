@@ -1,6 +1,5 @@
 package com.roco.sniffer.extractors;
 
-import com.roco.sniffer.*;
 import lombok.extern.slf4j.Slf4j;
 import Next.pojo.BattleCastSkillReq;
 import Next.pojo.BattleRoundFlowReq;

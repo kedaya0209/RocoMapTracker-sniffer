@@ -1,6 +1,5 @@
-package com.roco.sniffer;
+package com.roco.sniffer.extractors;
 
-import com.roco.sniffer.extractors.*;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.HashMap;
@@ -20,14 +19,6 @@ public class ExtractorRegistry {
 
     public void register(int opcode, EventExtractor extractor) {
         extractors.put(opcode, extractor);
-    }
-
-    public void unregister(int opcode) {
-        extractors.remove(opcode);
-    }
-
-    public boolean hasExtractor(int opcode) {
-        return extractors.containsKey(opcode);
     }
 
     public Set<Integer> registeredOpcodes() {

@@ -20,14 +20,14 @@ public class OpcodeReader {
      * 从解密后的 body 中提取 opcode。
      *
      * @param body      解密后的明文
-     * @param direction "c2s" 或 "s2c"
+     * @param direction 方向
      * @return opcode，或 null（无法识别）
      */
-    public static Integer peek(byte[] body, String direction) {
+    public static Integer peek(byte[] body, Direction direction) {
         if (body == null) return null;
 
         // s2c: magic 0x55AA at body[4:6], opcode at body[0:4] (big-endian)
-        if ("s2c".equals(direction) && body.length >= 10) {
+        if (direction == Direction.S2C && body.length >= 10) {
             if (body[4] == MAGIC_S2C[0] && body[5] == MAGIC_S2C[1]) {
                 int op = readUint32BE(body, 0);
                 return (op > 0 && op <= 0xFFFF) ? op : null;
@@ -35,7 +35,7 @@ public class OpcodeReader {
         }
 
         // c2s: magic 0x3963 or 0x7CA2 at body[8:10], raw_opcode at body[4:8]
-        if ("c2s".equals(direction) && body.length >= 14) {
+        if (direction == Direction.C2S && body.length >= 14) {
             boolean magic1 = body[8] == MAGIC_C2S_1[0] && body[9] == MAGIC_C2S_1[1];
             boolean magic2 = body[8] == MAGIC_C2S_2[0] && body[9] == MAGIC_C2S_2[1];
             if (magic1 || magic2) {

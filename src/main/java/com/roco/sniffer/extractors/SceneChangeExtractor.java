@@ -1,6 +1,6 @@
 package com.roco.sniffer.extractors;
 
-import com.roco.sniffer.*;
+import com.roco.sniffer.codec.MessageType;
 import lombok.extern.slf4j.Slf4j;
 import Next.pojo.ZoneSceneMoveReq;
 
@@ -33,13 +33,13 @@ public class SceneChangeExtractor implements EventExtractor {
                 boolean isMain = (sceneCfgId == MAIN_WORLD_SCENE_ID);
                 if (isMain && !ctx.inMainWorld()) {
                     ctx.inMainWorld(true);
-                    ctx.enqueue(RmtSender.MSG_START_MATCHING, new byte[0]);
+                    ctx.enqueue(MessageType.START_MATCHING.value(), new byte[0]);
                 } else if (!isMain && ctx.inMainWorld()) {
                     ctx.inMainWorld(false);
-                    ctx.enqueue(RmtSender.MSG_STOP_MATCHING, new byte[0]);
+                    ctx.enqueue(MessageType.STOP_MATCHING.value(), new byte[0]);
                 }
                 byte[] body = ByteBuffer.allocate(4).putInt(sceneCfgId).array();
-                ctx.enqueue(RmtSender.MSG_SCENE_CHANGE, body);
+                ctx.enqueue(MessageType.SCENE_CHANGE.value(), body);
             }
         } catch (Exception e) {
             log.debug("0x0133 parseFrom 失败: {}", e.getMessage());

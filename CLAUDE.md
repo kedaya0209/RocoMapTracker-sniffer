@@ -139,7 +139,12 @@ mvn native:compile -q
 - **POJO 类导入**: 使用 `import Next.pojo.XxxYyy` 形式，不要用通配符
 - **POJO 类生成**: `gen_pojo.py` 从 proto 文件生成 `Next.pojo.*` record 类，每个消息一个文件，含 `parseFrom(byte[])` 和 `parseFrom(List<ProtoField>)` 方法
 - **Proto 字段名**: POJO 使用 camelCase（如 `sceneCfgId`），注意 `SpaceActionCollection.entertedCatcher()` (proto 定义中的拼写错误)
-
+- **SOLID 原则**: 类设计应遵循 SOLID 原则：
+  - **S (单一职责)**: 每个提取器只负责一个语义域（如战斗、场景、宠物），不混合不相关的 opcode 逻辑；codec 包的类保持无状态纯工具职责
+  - **O (开闭原则)**: 新增 opcode 通过实现新的 `EventExtractor` 并注册到 `ExtractorRegistry`，不修改已有提取器或分发逻辑
+  - **L (里氏替换)**: 所有 `EventExtractor` 实现必须可互换使用，`handle()` 的异常行为（内部捕获不抛出）和入队行为（`ctx.enqueue()`）契约不可违反
+  - **I (接口隔离)**: `EventExtractor` 保持精简的函数式接口（`handle` + `supportedOpcodes`），不强制依赖不需要的方法
+  - **D (依赖倒置)**: 提取器通过 `ExtractorContext` 抽象访问配置和运行时状态，不直接持有 `ConfigDb`、`RmtSender` 等具体类的引用
 ## 目录结构
 
 ```

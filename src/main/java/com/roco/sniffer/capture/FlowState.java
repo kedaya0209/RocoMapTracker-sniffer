@@ -1,5 +1,6 @@
 package com.roco.sniffer.capture;
 
+import com.roco.sniffer.codec.Direction;
 import lombok.Getter;
 import lombok.Setter;
 import net.jcip.annotations.NotThreadSafe;
@@ -26,8 +27,8 @@ public class FlowState {
     @Setter
     private volatile byte[] key;
 
-    private final DirectionState c2s = new DirectionState("c2s");
-    private final DirectionState s2c = new DirectionState("s2c");
+    private final DirectionState c2s = new DirectionState(Direction.C2S);
+    private final DirectionState s2c = new DirectionState(Direction.S2C);
 
     public FlowState(String flowId, String clientIp, int clientPort,
                      String serverIp, int serverPort, byte[] presetKey) {
@@ -39,7 +40,7 @@ public class FlowState {
         this.key = presetKey;
     }
 
-    public DirectionState directionState(String direction) {
-        return "c2s".equals(direction) ? c2s : s2c;
+    public DirectionState directionState(Direction direction) {
+        return direction == Direction.C2S ? c2s : s2c;
     }
 }

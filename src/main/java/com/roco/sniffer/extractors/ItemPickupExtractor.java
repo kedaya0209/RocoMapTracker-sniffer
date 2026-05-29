@@ -1,7 +1,6 @@
 package com.roco.sniffer.extractors;
 
-import com.roco.sniffer.*;
-import com.roco.sniffer.data.ConfigDb;
+import com.roco.sniffer.codec.MessageType;
 import lombok.extern.slf4j.Slf4j;
 import Next.pojo.GoodsChangeItem;
 import Next.pojo.GoodsItem;
@@ -51,7 +50,7 @@ public class ItemPickupExtractor implements EventExtractor {
 
                 byte[] body = String.format("%s|%d|%d", tag, pickupNum, totalNum)
                         .getBytes(java.nio.charset.StandardCharsets.UTF_8);
-                ctx.enqueue(RmtSender.MSG_ITEM_PICKUP, body);
+                ctx.enqueue(MessageType.ITEM_PICKUP.value(), body);
                 log.info("[pickup] {} x{}", tag, pickupNum);
             }
         } catch (Exception e) {

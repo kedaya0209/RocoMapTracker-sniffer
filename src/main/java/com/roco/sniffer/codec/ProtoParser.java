@@ -112,10 +112,10 @@ public class ProtoParser {
      * </ol>
      *
      * @param body      解密后的 0x4013 body
-     * @param direction "c2s" 或 "s2c"
+     * @param direction 方向
      * @return 解析结果，无法识别时返回 null
      */
-    public static Record parseRecord(byte[] body, String direction) {
+    public static Record parseRecord(byte[] body, Direction direction) {
         if (body == null) return null;
         Record r;
         r = parseRecordV14(body, direction);
@@ -134,7 +134,7 @@ public class ProtoParser {
     /**
      * v14 布局: body[4:6]==0x55AA && body[24:26]==0x3963, payload 从 body[30:] 开始。
      */
-    private static Record parseRecordV14(byte[] body, String direction) {
+    private static Record parseRecordV14(byte[] body, Direction direction) {
         if (body.length < 0x1E) return null;
         if (body[4] != MAGIC_S2C[0] || body[5] != MAGIC_S2C[1]) return null;
         if (body[24] != MAGIC_C2S_1[0] || body[25] != MAGIC_C2S_1[1]) return null;
@@ -158,7 +158,7 @@ public class ProtoParser {
         byte[] payload = stripTsf4gPadding(rawPayload);
         int opcode;
         boolean normalized;
-        if ("c2s".equals(direction)) {
+        if (direction == Direction.C2S) {
             opcode = normalizeC2sOpcode((int) subId);
             normalized = (subId > 0xFFFF);
         } else {
@@ -174,8 +174,8 @@ public class ProtoParser {
     /**
      * live_s2c 布局: s2c, body[4:6]==0x55AA, opcode 在 body[0:4], payload 从 body[10:] 开始。
      */
-    private static Record parseRecordLiveS2c(byte[] body, String direction) {
-        if (!"s2c".equals(direction) || body.length < 10) return null;
+    private static Record parseRecordLiveS2c(byte[] body, Direction direction) {
+        if (direction != Direction.S2C || body.length < 10) return null;
         if (body[4] != MAGIC_S2C[0] || body[5] != MAGIC_S2C[1]) return null;
 
         int opcode = (int) readUint32BE(body, 0);
@@ -192,8 +192,8 @@ public class ProtoParser {
     /**
      * live_c2s 布局: c2s, body[8:10]==0x3963, raw_opcode 在 body[4:8], payload 从 body[14:] 开始。
      */
-    private static Record parseRecordLiveC2s(byte[] body, String direction) {
-        if (!"c2s".equals(direction) || body.length < 14) return null;
+    private static Record parseRecordLiveC2s(byte[] body, Direction direction) {
+        if (direction != Direction.C2S || body.length < 14) return null;
         if (body[8] != MAGIC_C2S_1[0] || body[9] != MAGIC_C2S_1[1]) return null;
 
         long prefixU32 = readUint32BE(body, 0);
@@ -214,8 +214,8 @@ public class ProtoParser {
     /**
      * live_c2s_alt_7ca2 布局: c2s, body[8:10]==0x7CA2, payload 从 body[14:] 开始。
      */
-    private static Record parseRecordLiveC2sAlt7ca2(byte[] body, String direction) {
-        if (!"c2s".equals(direction) || body.length < 14) return null;
+    private static Record parseRecordLiveC2sAlt7ca2(byte[] body, Direction direction) {
+        if (direction != Direction.C2S || body.length < 14) return null;
         if (body[8] != MAGIC_C2S_2[0] || body[9] != MAGIC_C2S_2[1]) return null;
 
         long prefixU32 = readUint32BE(body, 0);
@@ -236,8 +236,8 @@ public class ProtoParser {
     /**
      * short_heartbeat 布局: c2s, body 含 "tsf4g", opcode=0x013E。
      */
-    private static Record parseRecordLiveC2sShortHeartbeat(byte[] body, String direction) {
-        if (!"c2s".equals(direction) || body.length < 16) return null;
+    private static Record parseRecordLiveC2sShortHeartbeat(byte[] body, Direction direction) {
+        if (direction != Direction.C2S || body.length < 16) return null;
         if (indexOf(body, "tsf4g".getBytes()) < 8) return null;
 
         int opcode = readUint16BE(body, 6);
@@ -343,7 +343,7 @@ public class ProtoParser {
      * 传输层 record 解析结果。
      *
      * @param layout     传输布局名称
-     * @param direction  "c2s" 或 "s2c"
+     * @param direction  方向
      * @param opcode     消息 opcode
      * @param payload    去除传输层头 + TSF4G 尾部后的 protobuf payload
      * @param fields     payload 的 protobuf 字段树
@@ -351,64 +351,9 @@ public class ProtoParser {
      * @param reqSeq     请求序列号
      * @param trailerLen TSF4G 尾部长度
      */
-    public record Record(String layout, String direction, int opcode,
+    public record Record(String layout, Direction direction, int opcode,
                          byte[] payload, List<ProtoField> fields,
                          long seq, long reqSeq, int trailerLen) {
-    }
-
-    // ── 辅助方法 ──
-
-    /**
-     * 从 protobuf 消息中提取指定 field number 的原始字节（wireType 2 = length-delimited）。
-     * 与 parse() 不同，保留原始字节用于直接 parseFrom()。
-     */
-    public static byte[] extractFieldBytes(byte[] data, int targetFieldNo) {
-        if (data == null) return null;
-        int pos = 0;
-        while (pos < data.length) {
-            int tagStart = pos;
-            long tag = 0;
-            int shift = 0;
-            while (pos < data.length) {
-                int b = data[pos++] & 0xFF;
-                tag |= (long) (b & 0x7F) << shift;
-                shift += 7;
-                if ((b & 0x80) == 0) break;
-                if (shift > 35) break;
-            }
-            int fieldNo = (int) (tag >>> 3);
-            int wireType = (int) (tag & 0x7);
-            if (fieldNo <= 0) break;
-
-            switch (wireType) {
-                case 0 -> { // varint
-                    while (pos < data.length) {
-                        int b = data[pos++] & 0xFF;
-                        if ((b & 0x80) == 0) break;
-                    }
-                }
-                case 1 -> pos += 8; // 64-bit
-                case 2 -> { // length-delimited
-                    int len = 0;
-                    int ls = 0;
-                    while (pos < data.length) {
-                        int b = data[pos++] & 0xFF;
-                        len |= (b & 0x7F) << ls;
-                        ls += 7;
-                        if ((b & 0x80) == 0) break;
-                        if (ls > 28) break;
-                    }
-                    if (pos + len > data.length) return null;
-                    if (fieldNo == targetFieldNo) {
-                        return Arrays.copyOfRange(data, pos, pos + len);
-                    }
-                    pos += len;
-                }
-                case 5 -> pos += 4; // 32-bit
-                default -> { return null; } // 未知 wire type
-            }
-        }
-        return null;
     }
 
     // ── 字段数据类 ──

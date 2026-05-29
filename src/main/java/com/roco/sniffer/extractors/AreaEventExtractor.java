@@ -1,6 +1,6 @@
 package com.roco.sniffer.extractors;
 
-import com.roco.sniffer.*;
+import com.roco.sniffer.codec.MessageType;
 import lombok.extern.slf4j.Slf4j;
 import Next.pojo.SpaceActionCollection;
 import Next.pojo.SpaceAct_EnteredCatcher;
@@ -37,7 +37,7 @@ public class AreaEventExtractor implements EventExtractor {
                                 ? name.getBytes(StandardCharsets.UTF_8)
                                 : ByteBuffer.allocate(4).putInt(afid).array();
                         log.info("[area] RMT 区域变更: {}", name != null ? name : "#" + afid);
-                        ctx.enqueue(RmtSender.MSG_AREA_CHANGE, body);
+                        ctx.enqueue(MessageType.AREA_CHANGE.value(), body);
                     }
                 }
                 SpaceAct_LeftCatcher left = act.leftCatcher();

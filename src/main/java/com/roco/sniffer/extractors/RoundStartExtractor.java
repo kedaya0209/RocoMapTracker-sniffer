@@ -1,6 +1,5 @@
 package com.roco.sniffer.extractors;
 
-import com.roco.sniffer.*;
 import lombok.extern.slf4j.Slf4j;
 import java.util.Set;
 import Next.pojo.ZoneBattleRoundStartNotify;

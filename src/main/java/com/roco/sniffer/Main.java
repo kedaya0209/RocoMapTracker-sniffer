@@ -48,6 +48,7 @@ public class Main {
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             log.info("正在停止...");
             bridge.stop();
+            rmtSender.close();
             try { conn.close(); } catch (Exception ignored) {}
             log.info("已停止");
         }));

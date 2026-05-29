@@ -1,7 +1,5 @@
 package com.roco.sniffer.extractors;
 
-import com.roco.sniffer.EventExtractor;
-import com.roco.sniffer.ExtractorContext;
 import lombok.extern.slf4j.Slf4j;
 import Next.pojo.PetData;
 import Next.pojo.PetDataInfoList;

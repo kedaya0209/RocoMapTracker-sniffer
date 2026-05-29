@@ -1,4 +1,4 @@
-package com.roco.sniffer;
+package com.roco.sniffer.extractors;
 
 import java.util.Set;
 

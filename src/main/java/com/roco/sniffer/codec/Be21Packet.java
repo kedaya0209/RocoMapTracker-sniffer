@@ -17,7 +17,7 @@ package com.roco.sniffer.codec;
  * </pre>
  */
 public record Be21Packet(
-        String direction,
+        Direction direction,
         long streamOffset,
         int cmd,
         long seq,

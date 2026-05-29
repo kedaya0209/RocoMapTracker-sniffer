@@ -21,11 +21,11 @@ public class Be21Parser {
      * 从 buffer 中解析 BE21 帧。
      *
      * @param buffer    字节流缓冲区
-     * @param direction 方向 ("c2s" 或 "s2c")
+     * @param direction 方向
      * @param start     起始偏移
      * @return 解析结果：帧列表 + 新的解析偏移
      */
-    public static ParseResult parse(byte[] buffer, String direction, int start) {
+    public static ParseResult parse(byte[] buffer, Direction direction, int start) {
         List<Be21Packet> packets = new ArrayList<>();
         int off = start;
         int size = buffer.length;
