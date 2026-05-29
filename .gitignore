@@ -1,8 +1,6 @@
 target/
 data/
 src/main/proto/
-rmt.db
-*.db
 *.class
 *.jar
 .idea/
