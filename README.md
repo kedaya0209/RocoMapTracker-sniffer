@@ -14,21 +14,14 @@ RocoMapTracker 的 Java 抓包桥接组件，功能等价于 Python 版 `rmt_bri
 - 场景坐标 → 地图像素坐标转换
 - 跨请求物品拾取合并（150ms 防抖）
 - 通过 opcode 预过滤跳过 95% 无关包的解密/解析
-- 支持 GraalVM native image 编译为独立可执行文件
 
 ## 使用
-
-```bash
-java -jar RocoMapTracker-sniffer-1.0-SNAPSHOT.jar <RMT端口>
-```
-
-或使用 native image：
 
 ```bash
 RocoMapTracker-sniffer.exe <RMT端口>
 ```
 
-`rmt.db` 需放在工作目录（jar）或可执行文件同目录（native image）下。
+`rmt.db` 需放在可执行文件同目录下。
 
 ## 构建
 
