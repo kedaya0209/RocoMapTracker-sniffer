@@ -62,20 +62,14 @@ public class RmtBridge {
 
     private PcapHandle sniffer;
 
-    public RmtBridge(String iface, int port, RmtSender rmtSender,
-                     ConfigDb.BagItemDb bagDb, ConfigDb.AreaFuncDb areaFuncDb,
-                     ConfigDb.NameDb skillDb, ConfigDb.NameDb buffDb,
-                     ConfigDb.NameDb effectDb, ConfigDb.NameDb sceneNameDb,
-                     ConfigDb.NameDb petDb, ConfigDb.NameDb natureDb,
-                     ConfigDb.NameDb attributeDb) {
+    public RmtBridge(String iface, int port, RmtSender rmtSender, ConfigDb configDb) {
         this.iface = iface;
         this.port = port;
         this.rmtSender = rmtSender;
 
         // 构建提取器注册表
         this.registry = ExtractorRegistry.createDefault();
-        this.ctx = new ExtractorContext(bagDb, areaFuncDb,
-                skillDb, buffDb, effectDb, sceneNameDb, petDb, natureDb, attributeDb,
+        this.ctx = new ExtractorContext(configDb,
                 (serviceId, payload) -> ioPool.offer(
                         new IoEntry(System.nanoTime(), 0, serviceId, payload)));
 

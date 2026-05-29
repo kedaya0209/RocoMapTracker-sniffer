@@ -17,15 +17,7 @@ import java.util.function.BiConsumer;
  */
 public class ExtractorContext {
 
-    private final ConfigDb.BagItemDb bagDb;
-    private final ConfigDb.AreaFuncDb areaFuncDb;
-    private final ConfigDb.NameDb skillDb;
-    private final ConfigDb.NameDb buffDb;
-    private final ConfigDb.NameDb effectDb;
-    private final ConfigDb.NameDb sceneNameDb;
-    private final ConfigDb.NameDb petDb;
-    private final ConfigDb.NameDb natureDb;
-    private final ConfigDb.NameDb attributeDb;
+    private final ConfigDb configDb;
     private final BiConsumer<Integer, byte[]> enqueue;
 
     // ── 运行时状态（volatile，由多个解码线程读写） ──
@@ -42,25 +34,8 @@ public class ExtractorContext {
     // ── 玩家数据缓存（登录时由 TeamRosterExtractor 填充） ──
     private final Map<Integer, String> playerNameCache = new ConcurrentHashMap<>();
 
-    public ExtractorContext(ConfigDb.BagItemDb bagDb,
-                            ConfigDb.AreaFuncDb areaFuncDb,
-                            ConfigDb.NameDb skillDb,
-                            ConfigDb.NameDb buffDb,
-                            ConfigDb.NameDb effectDb,
-                            ConfigDb.NameDb sceneNameDb,
-                            ConfigDb.NameDb petDb,
-                            ConfigDb.NameDb natureDb,
-                            ConfigDb.NameDb attributeDb,
-                            BiConsumer<Integer, byte[]> enqueue) {
-        this.bagDb = bagDb;
-        this.areaFuncDb = areaFuncDb;
-        this.skillDb = skillDb;
-        this.buffDb = buffDb;
-        this.effectDb = effectDb;
-        this.sceneNameDb = sceneNameDb;
-        this.petDb = petDb;
-        this.natureDb = natureDb;
-        this.attributeDb = attributeDb;
+    public ExtractorContext(ConfigDb configDb, BiConsumer<Integer, byte[]> enqueue) {
+        this.configDb = configDb;
         this.enqueue = enqueue;
     }
 
@@ -78,15 +53,16 @@ public class ExtractorContext {
 
     // ── 访问器 ──
 
-    public ConfigDb.BagItemDb bagDb() { return bagDb; }
-    public ConfigDb.AreaFuncDb areaFuncDb() { return areaFuncDb; }
-    public ConfigDb.NameDb skillDb() { return skillDb; }
-    public ConfigDb.NameDb buffDb() { return buffDb; }
-    public ConfigDb.NameDb effectDb() { return effectDb; }
-    public ConfigDb.NameDb sceneNameDb() { return sceneNameDb; }
-    public ConfigDb.NameDb petDb() { return petDb; }
-    public ConfigDb.NameDb natureDb() { return natureDb; }
-    public ConfigDb.NameDb attributeDb() { return attributeDb; }
+    public ConfigDb configDb() { return configDb; }
+    public ConfigDb.BagItemDb bagDb() { return configDb.bagItemDb(); }
+    public ConfigDb.AreaFuncDb areaFuncDb() { return configDb.areaFuncDb(); }
+    public ConfigDb.NameDb skillDb() { return configDb.skillDb(); }
+    public ConfigDb.NameDb buffDb() { return configDb.buffDb(); }
+    public ConfigDb.NameDb effectDb() { return configDb.effectDb(); }
+    public ConfigDb.NameDb sceneNameDb() { return configDb.sceneNameDb(); }
+    public ConfigDb.NameDb petDb() { return configDb.petDb(); }
+    public ConfigDb.NameDb natureDb() { return configDb.natureDb(); }
+    public ConfigDb.NameDb attributeDb() { return configDb.attributeDb(); }
 
     // ── 状态读写 ──
 
@@ -106,7 +82,7 @@ public class ExtractorContext {
     public String petName(long gid) {
         Integer confId = gidToConfId.get(gid);
         if (confId != null) {
-            String name = petDb.lookup(confId);
+            String name = petDb().lookup(confId);
             if (name != null) return name;
         }
         return petNameCache.get(gid);

@@ -32,26 +32,7 @@ public class Main {
         conn.createStatement().executeUpdate("PRAGMA mmap_size = 1073741824"); // 1GB，SQLite 自动 clamp 到文件大小
 
         // 加载配置
-        ConfigDb.SceneDb sceneDb = new ConfigDb.SceneDb(conn);
-        sceneDb.load();
-        ConfigDb.BagItemDb bagDb = new ConfigDb.BagItemDb(conn);
-        bagDb.load();
-        ConfigDb.AreaFuncDb areaFuncDb = new ConfigDb.AreaFuncDb(conn);
-        areaFuncDb.load();
-        ConfigDb.NameDb skillDb = new ConfigDb.NameDb(conn, "skill", "name", 100);
-        skillDb.load();
-        ConfigDb.NameDb buffDb = new ConfigDb.NameDb(conn, "buff", "name");
-        buffDb.load();
-        ConfigDb.NameDb effectDb = new ConfigDb.NameDb(conn, "effect", "editor_name");
-        effectDb.load();
-        ConfigDb.NameDb sceneNameDb = new ConfigDb.NameDb(conn, "scene_conf", "scene_name");
-        sceneNameDb.load();
-        ConfigDb.NameDb petDb = new ConfigDb.NameDb(conn, "pet", "name");
-        petDb.load();
-        ConfigDb.NameDb natureDb = new ConfigDb.NameDb(conn, "nature", "name");
-        natureDb.load();
-        ConfigDb.NameDb attributeDb = new ConfigDb.NameDb(conn, "attribute", "name");
-        attributeDb.load();
+        ConfigDb configDb = ConfigDb.loadAll(conn);
 
         // 连接 RMT
         RmtSender rmtSender = new RmtSender("127.0.0.1", rmtPort);
@@ -62,8 +43,7 @@ public class Main {
 
         // 启动桥接器
         String iface = autoDetectIface();
-        RmtBridge bridge = new RmtBridge(iface, 8195, rmtSender,
-                bagDb, areaFuncDb, skillDb, buffDb, effectDb, sceneNameDb, petDb, natureDb, attributeDb);
+        RmtBridge bridge = new RmtBridge(iface, 8195, rmtSender, configDb);
 
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             log.info("正在停止...");

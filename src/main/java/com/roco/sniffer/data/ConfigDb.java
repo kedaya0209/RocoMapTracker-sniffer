@@ -17,6 +17,69 @@ import org.slf4j.LoggerFactory;
 @Slf4j
 public class ConfigDb {
 
+    private final SceneDb sceneDb;
+    private final BagItemDb bagItemDb;
+    private final AreaFuncDb areaFuncDb;
+    private final NameDb skillDb;
+    private final NameDb buffDb;
+    private final NameDb effectDb;
+    private final NameDb sceneNameDb;
+    private final NameDb petDb;
+    private final NameDb natureDb;
+    private final NameDb attributeDb;
+
+    private ConfigDb(SceneDb sceneDb, BagItemDb bagItemDb, AreaFuncDb areaFuncDb,
+                     NameDb skillDb, NameDb buffDb, NameDb effectDb, NameDb sceneNameDb,
+                     NameDb petDb, NameDb natureDb, NameDb attributeDb) {
+        this.sceneDb = sceneDb;
+        this.bagItemDb = bagItemDb;
+        this.areaFuncDb = areaFuncDb;
+        this.skillDb = skillDb;
+        this.buffDb = buffDb;
+        this.effectDb = effectDb;
+        this.sceneNameDb = sceneNameDb;
+        this.petDb = petDb;
+        this.natureDb = natureDb;
+        this.attributeDb = attributeDb;
+    }
+
+    /** 从 SQLite 连接创建并加载所有游戏配置数据库 */
+    public static ConfigDb loadAll(java.sql.Connection conn) {
+        SceneDb sceneDb = new SceneDb(conn);
+        sceneDb.load();
+        BagItemDb bagItemDb = new BagItemDb(conn);
+        bagItemDb.load();
+        AreaFuncDb areaFuncDb = new AreaFuncDb(conn);
+        areaFuncDb.load();
+        NameDb skillDb = new NameDb(conn, "skill", "name", 100);
+        skillDb.load();
+        NameDb buffDb = new NameDb(conn, "buff", "name");
+        buffDb.load();
+        NameDb effectDb = new NameDb(conn, "effect", "editor_name");
+        effectDb.load();
+        NameDb sceneNameDb = new NameDb(conn, "scene_conf", "scene_name");
+        sceneNameDb.load();
+        NameDb petDb = new NameDb(conn, "pet", "name");
+        petDb.load();
+        NameDb natureDb = new NameDb(conn, "nature", "name");
+        natureDb.load();
+        NameDb attributeDb = new NameDb(conn, "attribute", "name");
+        attributeDb.load();
+        return new ConfigDb(sceneDb, bagItemDb, areaFuncDb,
+                skillDb, buffDb, effectDb, sceneNameDb, petDb, natureDb, attributeDb);
+    }
+
+    public SceneDb sceneDb() { return sceneDb; }
+    public BagItemDb bagItemDb() { return bagItemDb; }
+    public AreaFuncDb areaFuncDb() { return areaFuncDb; }
+    public NameDb skillDb() { return skillDb; }
+    public NameDb buffDb() { return buffDb; }
+    public NameDb effectDb() { return effectDb; }
+    public NameDb sceneNameDb() { return sceneNameDb; }
+    public NameDb petDb() { return petDb; }
+    public NameDb natureDb() { return natureDb; }
+    public NameDb attributeDb() { return attributeDb; }
+
     // ── 场景数据库 ──
 
     public record SceneParams(double centerX, double centerY, double sideLength) {}
