@@ -57,15 +57,29 @@ public class Main {
     }
 
     /**
-     * 从当前工作目录加载 game_data.db。
+     * 加载 rmt.db — 依次尝试：当前目录 → 可执行文件所在目录。
      */
     private static Path resolveDbPath() throws Exception {
-        Path dbPath = Paths.get("rmt.db");
-        if (Files.isRegularFile(dbPath)) {
-            log.info("从外部加载数据库: {}", dbPath.toAbsolutePath());
-            return dbPath.toAbsolutePath();
+        // 1) 当前工作目录
+        Path cwd = Paths.get("rmt.db").toAbsolutePath();
+        if (Files.isRegularFile(cwd)) {
+            log.info("加载数据库: {}", cwd);
+            return cwd;
         }
-        throw new RuntimeException("rmt.db 不存在，请放在工作目录下: " + Paths.get(".").toAbsolutePath());
+        // 2) 可执行文件所在目录（native image 下可靠）
+        String cmd = ProcessHandle.current().info().command().orElse(null);
+        if (cmd != null) {
+            Path exeDir = Paths.get(cmd).getParent();
+            if (exeDir != null) {
+                Path exeDb = exeDir.resolve("rmt.db");
+                if (Files.isRegularFile(exeDb)) {
+                    log.info("从可执行文件目录加载数据库: {}", exeDb);
+                    return exeDb;
+                }
+            }
+        }
+        throw new RuntimeException("rmt.db 不存在，请放在工作目录下: "
+                + Paths.get(".").toAbsolutePath());
     }
 
     private static String autoDetectIface() {

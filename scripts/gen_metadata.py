@@ -44,6 +44,7 @@ def main():
         'name': 'sniffer',
         'title': '抓包桥接器',
         'version': version,
+        'description': '高级版内置组件,默认启用',
         'entry': 'RocoMapTracker-sniffer.exe',
         'source': {
             'type': 'github-release',
