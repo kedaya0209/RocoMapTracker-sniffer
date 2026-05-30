@@ -47,9 +47,9 @@ jobs:
       - name: Verify token against GitHub Packages
         shell: bash
         run: |
-          curl -v -u "kedaya0209:${{ secrets.GH_PACKAGES_TOKEN }}" \
+          curl -vL -u "kedaya0209:${{ secrets.GH_PACKAGES_TOKEN }}" \
             "https://maven.pkg.github.com/kedaya0209/RocoMapTracker/io/github/kedaya0209/roco-common/1.2.0/roco-common-1.2.0.pom" \
-            -o /dev/null 2>&1 | head -30
+            -o /dev/null 2>&1 | tail -20
 
       - name: Setup Visual Studio (rc.exe)
         uses: ilammy/msvc-dev-cmd@v1
