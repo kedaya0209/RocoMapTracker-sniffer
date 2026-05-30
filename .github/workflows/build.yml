@@ -41,9 +41,31 @@ jobs:
             </servers>
           </settings>
           EOF
-          # 打印内容（隐藏密码）用于调试
-          echo "=== settings.xml ==="
+          echo "=== settings.xml (password hidden) ==="
           sed 's/<password>.*<\/password>/<password>***<\/password>/' ~/.m2/settings.xml
+
+      - name: Install parent POM stub (roco-map-tracker) to local repo
+        shell: bash
+        run: |
+          cat > /tmp/roco-map-tracker-1.2.0.pom << 'POMEOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <project xmlns="http://maven.apache.org/POM/4.0.0"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+              <modelVersion>4.0.0</modelVersion>
+              <groupId>io.github.kedaya0209</groupId>
+              <artifactId>roco-map-tracker</artifactId>
+              <version>1.2.0</version>
+              <packaging>pom</packaging>
+          </project>
+          POMEOF
+          mvn install:install-file \
+            -Dfile=/tmp/roco-map-tracker-1.2.0.pom \
+            -DgroupId=io.github.kedaya0209 \
+            -DartifactId=roco-map-tracker \
+            -Dversion=1.2.0 \
+            -Dpackaging=pom -B
+          echo "Parent POM stub installed"
 
       - name: Setup Visual Studio (rc.exe)
         uses: ilammy/msvc-dev-cmd@v1
@@ -87,8 +109,31 @@ jobs:
             </servers>
           </settings>
           EOF
-          echo "=== settings.xml ==="
+          echo "=== settings.xml (password hidden) ==="
           sed 's/<password>.*<\/password>/<password>***<\/password>/' ~/.m2/settings.xml
+
+      - name: Install parent POM stub (roco-map-tracker) to local repo
+        shell: bash
+        run: |
+          cat > /tmp/roco-map-tracker-1.2.0.pom << 'POMEOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <project xmlns="http://maven.apache.org/POM/4.0.0"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+              <modelVersion>4.0.0</modelVersion>
+              <groupId>io.github.kedaya0209</groupId>
+              <artifactId>roco-map-tracker</artifactId>
+              <version>1.2.0</version>
+              <packaging>pom</packaging>
+          </project>
+          POMEOF
+          mvn install:install-file \
+            -Dfile=/tmp/roco-map-tracker-1.2.0.pom \
+            -DgroupId=io.github.kedaya0209 \
+            -DartifactId=roco-map-tracker \
+            -Dversion=1.2.0 \
+            -Dpackaging=pom -B
+          echo "Parent POM stub installed"
 
       - name: Setup Visual Studio (rc.exe + linker)
         uses: ilammy/msvc-dev-cmd@v1
