@@ -115,14 +115,20 @@ jobs:
         continue-on-error: true
         shell: bash
         run: |
-          gh release delete "v${{ github.event.inputs.version }}" --yes 2>/dev/null || true
-          git push --delete origin "v${{ github.event.inputs.version }}" 2>/dev/null || true
+          RAW="${{ github.event.inputs.version }}"
+          RAW="${RAW#v}"
+          TAG="v$RAW"
+          gh release delete "$TAG" --yes 2>/dev/null || true
+          git push --delete origin "$TAG" 2>/dev/null || true
         env:
           GH_TOKEN: ${{ github.token }}
 
       - name: Create GitHub Release
         shell: bash
         run: |
+          RAW="${{ github.event.inputs.version }}"
+          RAW="${RAW#v}"
+          TAG="v$RAW"
           cd target
           JAR=$(ls RocoMapTracker-sniffer-*.jar 2>/dev/null | head -1)
           EXE=RocoMapTracker-sniffer.exe
@@ -136,9 +142,9 @@ jobs:
           [ -f "$EXE_SHA256" ] && ASSETS+=("../target/$EXE_SHA256")
 
           echo "Uploading assets: ${ASSETS[*]}"
-          gh release create "v${{ github.event.inputs.version }}" \
+          gh release create "$TAG" \
             "${ASSETS[@]}" \
-            --title "v${{ github.event.inputs.version }}" \
+            --title "$TAG" \
             --notes-file ../releasenotes.md
         env:
           GH_TOKEN: ${{ github.token }}
