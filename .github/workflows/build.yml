@@ -53,6 +53,9 @@ jobs:
       - name: Install roco-common to local Maven repo from source
         shell: bash
         run: |
+          # 先安装根 POM（roco-map-tracker），-N = non-recursive
+          mvn install -f RocoMapTracker/pom.xml -N -DskipTests -q
+          # 再构建并安装 roco-common（含 a-m 自动解析父 POM）
           mvn install -f RocoMapTracker/pom.xml -pl roco-common -am -DskipTests -q
           echo "roco-common installed OK"
 
@@ -110,6 +113,9 @@ jobs:
       - name: Install roco-common to local Maven repo from source
         shell: bash
         run: |
+          # 先安装根 POM（roco-map-tracker），-N = non-recursive
+          mvn install -f RocoMapTracker/pom.xml -N -DskipTests -q
+          # 再构建并安装 roco-common（含 a-m 自动解析父 POM）
           mvn install -f RocoMapTracker/pom.xml -pl roco-common -am -DskipTests -q
           echo "roco-common installed OK"
 
