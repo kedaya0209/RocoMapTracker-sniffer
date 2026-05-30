@@ -25,58 +25,14 @@ jobs:
         with:
           java-version: 25
           distribution: graalvm
+          server-id: github
+          server-username: GH_PACKAGES_USER
+          server-password: GH_PACKAGES_TOKEN
 
-      - name: Install roco-common to local Maven repo
-        shell: bash
-        run: |
-          AUTH="kedaya0209:${{ secrets.GH_PACKAGES_TOKEN }}"
-          BASE="https://maven.pkg.github.com/kedaya0209/RocoMapTracker"
-          mkdir -p /tmp/roco-install
+      - name: Setup Visual Studio (rc.exe)
+        uses: ilammy/msvc-dev-cmd@v1
 
-          # Download roco-common POM + JAR via curl（已验证 -L 跟随重定向正常）
-          curl -fL -u "$AUTH" \
-            "$BASE/io/github/kedaya0209/roco-common/1.2.0/roco-common-1.2.0.pom" \
-            -o /tmp/roco-install/roco-common-1.2.0.pom
-          curl -fL -u "$AUTH" \
-            "$BASE/io/github/kedaya0209/roco-common/1.2.0/roco-common-1.2.0.jar" \
-            -o /tmp/roco-install/roco-common-1.2.0.jar
-
-          # 创建父 POM 桩（GitHub Packages 上没有部署它）
-          cat > /tmp/roco-install/roco-map-tracker-1.2.0.pom << 'POMEOF'
-          <?xml version="1.0" encoding="UTF-8"?>
-          <project xmlns="http://maven.apache.org/POM/4.0.0"
-                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-              <modelVersion>4.0.0</modelVersion>
-              <groupId>io.github.kedaya0209</groupId>
-              <artifactId>roco-map-tracker</artifactId>
-              <version>1.2.0</version>
-              <packaging>pom</packaging>
-          </project>
-          POMEOF
-          mvn install:install-file \
-            -Dfile=/tmp/roco-install/roco-map-tracker-1.2.0.pom \
-            -DgroupId=io.github.kedaya0209 \
-            -DartifactId=roco-map-tracker \
-            -Dversion=1.2.0 \
-            -Dpackaging=pom -B
-          echo "Parent POM stub installed"
-
-          # 安装 roco-common
-          mvn install:install-file \
-            -Dfile=/tmp/roco-install/roco-common-1.2.0.jar \
-            -DpomFile=/tmp/roco-install/roco-common-1.2.0.pom \
-            -B
-          echo "roco-common installed"
-
-          # 验证
-          echo "=== roco-map-tracker ==="
-          ls -la ~/.m2/repository/io/github/kedaya0209/roco-map-tracker/1.2.0/
-          echo "=== roco-common ==="
-          ls -la ~/.m2/repository/io/github/kedaya0209/roco-common/1.2.0/
-          echo "=== _remote.repositories ==="
-          cat ~/.m2/repository/io/github/kedaya0209/roco-common/1.2.0/_remote.repositories
-          cat ~/.m2/repository/io/github/kedaya0209/roco-map-tracker/1.2.0/_remote.repositories
+      - name: Build with Maven
         run: mvn clean package -DskipTests -B
 
       - name: Upload fat jar
@@ -99,54 +55,14 @@ jobs:
         with:
           java-version: 25
           distribution: graalvm
+          server-id: github
+          server-username: GH_PACKAGES_USER
+          server-password: GH_PACKAGES_TOKEN
 
-      - name: Install roco-common to local Maven repo
-        shell: bash
-        run: |
-          AUTH="kedaya0209:${{ secrets.GH_PACKAGES_TOKEN }}"
-          BASE="https://maven.pkg.github.com/kedaya0209/RocoMapTracker"
-          mkdir -p /tmp/roco-install
+      - name: Setup Visual Studio (rc.exe + linker)
+        uses: ilammy/msvc-dev-cmd@v1
 
-          curl -fL -u "$AUTH" \
-            "$BASE/io/github/kedaya0209/roco-common/1.2.0/roco-common-1.2.0.pom" \
-            -o /tmp/roco-install/roco-common-1.2.0.pom
-          curl -fL -u "$AUTH" \
-            "$BASE/io/github/kedaya0209/roco-common/1.2.0/roco-common-1.2.0.jar" \
-            -o /tmp/roco-install/roco-common-1.2.0.jar
-
-          cat > /tmp/roco-install/roco-map-tracker-1.2.0.pom << 'POMEOF'
-          <?xml version="1.0" encoding="UTF-8"?>
-          <project xmlns="http://maven.apache.org/POM/4.0.0"
-                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-              <modelVersion>4.0.0</modelVersion>
-              <groupId>io.github.kedaya0209</groupId>
-              <artifactId>roco-map-tracker</artifactId>
-              <version>1.2.0</version>
-              <packaging>pom</packaging>
-          </project>
-          POMEOF
-          mvn install:install-file \
-            -Dfile=/tmp/roco-install/roco-map-tracker-1.2.0.pom \
-            -DgroupId=io.github.kedaya0209 \
-            -DartifactId=roco-map-tracker \
-            -Dversion=1.2.0 \
-            -Dpackaging=pom -B
-          echo "Parent POM stub installed"
-
-          mvn install:install-file \
-            -Dfile=/tmp/roco-install/roco-common-1.2.0.jar \
-            -DpomFile=/tmp/roco-install/roco-common-1.2.0.pom \
-            -B
-          echo "roco-common installed"
-
-          echo "=== roco-map-tracker ==="
-          ls -la ~/.m2/repository/io/github/kedaya0209/roco-map-tracker/1.2.0/
-          echo "=== roco-common ==="
-          ls -la ~/.m2/repository/io/github/kedaya0209/roco-common/1.2.0/
-          echo "=== _remote.repositories ==="
-          cat ~/.m2/repository/io/github/kedaya0209/roco-common/1.2.0/_remote.repositories
-          cat ~/.m2/repository/io/github/kedaya0209/roco-map-tracker/1.2.0/_remote.repositories
+      - name: Build native image
         run: mvn native:compile -DskipTests -B -V
 
       - name: Upload native image
