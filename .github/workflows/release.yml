@@ -223,10 +223,9 @@ jobs:
           if [ -f "target/${ZIP_NAME}" ]; then
             ASSETS+=("target/${ZIP_NAME}")
           fi
-          # 辅助产物：fat jar
-          JAR=$(ls target/RocoMapTracker-sniffer-*.jar 2>/dev/null | head -1)
-          if [ -f "$JAR" ]; then
-            ASSETS+=("$JAR")
+          # 独立 exe（直接下载用）
+          if [ -f "target/RocoMapTracker-sniffer.exe" ]; then
+            ASSETS+=("target/RocoMapTracker-sniffer.exe")
           fi
 
           echo "Uploading assets: ${ASSETS[*]}"
