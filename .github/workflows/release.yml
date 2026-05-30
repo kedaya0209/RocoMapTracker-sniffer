@@ -182,13 +182,9 @@ jobs:
           ZIP_NAME="sniffer-v${VER}.zip"
 
           ASSETS=()
-          # 主产物：插件 zip
+          # 主产物：插件 zip（exe 已在 zip 内，不单独上传）
           if [ -f "target/${ZIP_NAME}" ]; then
             ASSETS+=("target/${ZIP_NAME}")
-          fi
-          # 独立 exe（直接下载用）
-          if [ -f "target/RocoMapTracker-sniffer.exe" ]; then
-            ASSETS+=("target/RocoMapTracker-sniffer.exe")
           fi
 
           echo "Uploading assets: ${ASSETS[*]}"
