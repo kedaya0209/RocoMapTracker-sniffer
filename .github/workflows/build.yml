@@ -26,8 +26,10 @@ jobs:
           java-version: 25
           distribution: graalvm
           server-id: github
-          server-username: ${{ secrets.GH_PACKAGES_USER }}
-          server-password: ${{ secrets.GH_PACKAGES_TOKEN }}
+          server-username: GITHUB_ACTOR
+          server-password: GH_PACKAGES_TOKEN
+        env:
+          GH_PACKAGES_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
 
       - name: Setup Visual Studio (rc.exe)
         uses: ilammy/msvc-dev-cmd@v1
@@ -56,8 +58,10 @@ jobs:
           java-version: 25
           distribution: graalvm
           server-id: github
-          server-username: ${{ secrets.GH_PACKAGES_USER }}
-          server-password: ${{ secrets.GH_PACKAGES_TOKEN }}
+          server-username: GITHUB_ACTOR
+          server-password: GH_PACKAGES_TOKEN
+        env:
+          GH_PACKAGES_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
 
       - name: Setup Visual Studio (rc.exe + linker)
         uses: ilammy/msvc-dev-cmd@v1
