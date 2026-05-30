@@ -44,12 +44,46 @@ jobs:
           echo '</settings>' >> ~/.m2/settings.xml
           cat ~/.m2/settings.xml
 
-      - name: Verify token against GitHub Packages
+      - name: Manually install roco-common from GitHub Packages
         shell: bash
         run: |
-          curl -vL -u "kedaya0209:${{ secrets.GH_PACKAGES_TOKEN }}" \
-            "https://maven.pkg.github.com/kedaya0209/RocoMapTracker/io/github/kedaya0209/roco-common/1.2.0/roco-common-1.2.0.pom" \
-            -o /dev/null 2>&1 | tail -20
+          AUTH="kedaya0209:${{ secrets.GH_PACKAGES_TOKEN }}"
+          BASE="https://maven.pkg.github.com/kedaya0209/RocoMapTracker"
+
+          # Install parent POM (roco-map-tracker)
+          PARENT_PATH="$HOME/.m2/repository/io/github/kedaya0209/roco-map-tracker/1.2.0"
+          mkdir -p "$PARENT_PATH"
+          curl -fL -u "$AUTH" \
+            "$BASE/io/github/kedaya0209/roco-map-tracker/1.2.0/roco-map-tracker-1.2.0.pom" \
+            -o "$PARENT_PATH/roco-map-tracker-1.2.0.pom"
+          echo "Parent POM downloaded OK"
+
+          # Install roco-common (JAR + POM)
+          COMMON_PATH="$HOME/.m2/repository/io/github/kedaya0209/roco-common/1.2.0"
+          mkdir -p "$COMMON_PATH"
+          curl -fL -u "$AUTH" \
+            "$BASE/io/github/kedaya0209/roco-common/1.2.0/roco-common-1.2.0.pom" \
+            -o "$COMMON_PATH/roco-common-1.2.0.pom"
+          echo "roco-common POM downloaded OK"
+          curl -fL -u "$AUTH" \
+            "$BASE/io/github/kedaya0209/roco-common/1.2.0/roco-common-1.2.0.jar" \
+            -o "$COMMON_PATH/roco-common-1.2.0.jar"
+          echo "roco-common JAR downloaded OK"
+
+          # Mark as local so Maven skips remote re-resolution
+          for DIR in "$PARENT_PATH" "$COMMON_PATH"; do
+            {
+              echo "#Maven Resolver internal file"
+              for f in "$DIR"/*.pom "$DIR"/*.jar; do
+                [ -f "$f" ] && echo "$(basename "$f")>=local"
+              done
+            } > "$DIR/_remote.repositories"
+          done
+
+          echo "=== roco-map-tracker ==="
+          ls -la "$PARENT_PATH/"
+          echo "=== roco-common ==="
+          ls -la "$COMMON_PATH/"
 
       - name: Setup Visual Studio (rc.exe)
         uses: ilammy/msvc-dev-cmd@v1
@@ -95,6 +129,47 @@ jobs:
           echo '  </servers>' >> ~/.m2/settings.xml
           echo '</settings>' >> ~/.m2/settings.xml
           cat ~/.m2/settings.xml
+
+      - name: Manually install roco-common from GitHub Packages
+        shell: bash
+        run: |
+          AUTH="kedaya0209:${{ secrets.GH_PACKAGES_TOKEN }}"
+          BASE="https://maven.pkg.github.com/kedaya0209/RocoMapTracker"
+
+          # Install parent POM (roco-map-tracker)
+          PARENT_PATH="$HOME/.m2/repository/io/github/kedaya0209/roco-map-tracker/1.2.0"
+          mkdir -p "$PARENT_PATH"
+          curl -fL -u "$AUTH" \
+            "$BASE/io/github/kedaya0209/roco-map-tracker/1.2.0/roco-map-tracker-1.2.0.pom" \
+            -o "$PARENT_PATH/roco-map-tracker-1.2.0.pom"
+          echo "Parent POM downloaded OK"
+
+          # Install roco-common (JAR + POM)
+          COMMON_PATH="$HOME/.m2/repository/io/github/kedaya0209/roco-common/1.2.0"
+          mkdir -p "$COMMON_PATH"
+          curl -fL -u "$AUTH" \
+            "$BASE/io/github/kedaya0209/roco-common/1.2.0/roco-common-1.2.0.pom" \
+            -o "$COMMON_PATH/roco-common-1.2.0.pom"
+          echo "roco-common POM downloaded OK"
+          curl -fL -u "$AUTH" \
+            "$BASE/io/github/kedaya0209/roco-common/1.2.0/roco-common-1.2.0.jar" \
+            -o "$COMMON_PATH/roco-common-1.2.0.jar"
+          echo "roco-common JAR downloaded OK"
+
+          # Mark as local so Maven skips remote re-resolution
+          for DIR in "$PARENT_PATH" "$COMMON_PATH"; do
+            {
+              echo "#Maven Resolver internal file"
+              for f in "$DIR"/*.pom "$DIR"/*.jar; do
+                [ -f "$f" ] && echo "$(basename "$f")>=local"
+              done
+            } > "$DIR/_remote.repositories"
+          done
+
+          echo "=== roco-map-tracker ==="
+          ls -la "$PARENT_PATH/"
+          echo "=== roco-common ==="
+          ls -la "$COMMON_PATH/"
 
       - name: Setup Visual Studio (rc.exe + linker)
         uses: ilammy/msvc-dev-cmd@v1
