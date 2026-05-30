@@ -122,8 +122,8 @@ jobs:
           fi
 
           # 复制图标
-          if [ -f src/main/resources/icon.svg ]; then
-            cp src/main/resources/icon.svg "${PKG_DIR}/"
+          if [ -f src/main/resources/rmt.svg ]; then
+            cp src/main/resources/rmt.svg "${PKG_DIR}/"
           fi
 
           # 生成 metadata.json
