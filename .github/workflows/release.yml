@@ -75,16 +75,99 @@ jobs:
       - name: Build native image
         run: mvn native:compile -DskipTests -B -V
 
-      - name: Generate SHA256 checksums
+      - name: Get latest data release tag
+        id: data_tag
+        continue-on-error: true
         shell: bash
         run: |
-          cd target
-          for f in RocoMapTracker-sniffer-*.jar RocoMapTracker-sniffer.exe; do
-            if [ -f "$f" ]; then
-              sha256sum "$f" > "$f.sha256"
-              echo "$f.sha256 generated"
-            fi
-          done
+          git fetch origin --tags --force 2>/dev/null || true
+          DATA_TAG=$(git tag -l 'data-v*' | sort -V | tail -1)
+          echo "data_tag=$DATA_TAG" >> "$GITHUB_OUTPUT"
+          echo "找到最新 data tag: $DATA_TAG"
+
+      - name: Download rmt.db from data release
+        if: steps.data_tag.outputs.data_tag != ''
+        shell: bash
+        run: |
+          DATA_TAG="${{ steps.data_tag.outputs.data_tag }}"
+          echo "从 $DATA_TAG 下载 rmt.db"
+          gh release download "$DATA_TAG" --pattern "rmt.db" --dir target
+          if [ -f target/rmt.db ]; then
+            echo "rmt.db 下载成功 ($(stat -c%s target/rmt.db) bytes)"
+          else
+            echo "rmt.db 未找到，将跳过打包"
+          fi
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Package plugin zip + metadata.json
+        shell: bash
+        run: |
+          RAW="${{ github.event.inputs.version }}"
+          RAW="${RAW#v}"
+          VER="$RAW"
+          ZIP_NAME="sniffer-v${VER}.zip"
+          PKG_DIR="sniffer"
+
+          mkdir -p "${PKG_DIR}"
+
+          # 复制 exe
+          if [ -f target/RocoMapTracker-sniffer.exe ]; then
+            cp target/RocoMapTracker-sniffer.exe "${PKG_DIR}/"
+          fi
+
+          # 复制 rmt.db（如果有）
+          if [ -f target/rmt.db ]; then
+            cp target/rmt.db "${PKG_DIR}/"
+          fi
+
+          # 计算 sha256 并生成 metadata.json（用 Python 避免 heredoc 缩进问题）
+          python -c "
+        import json, hashlib, os
+
+        pkg = '${PKG_DIR}'
+        assets = []
+
+        for f in ['RocoMapTracker-sniffer.exe', 'rmt.db']:
+            path = os.path.join(pkg, f)
+            if os.path.isfile(path):
+                sha = hashlib.sha256()
+                with open(path, 'rb') as fp:
+                    while True:
+                        buf = fp.read(65536)
+                        if not buf: break
+                        sha.update(buf)
+                assets.append({
+                    'remoteName': f,
+                    'localPath': f,
+                    'sha256': sha.hexdigest()
+                })
+                print(f'{f}: {sha.hexdigest()}')
+
+        meta = {
+            'name': 'sniffer',
+            'title': '抓包桥接器',
+            'version': '${VER}',
+            'entry': 'RocoMapTracker-sniffer.exe',
+            'source': {
+                'type': 'github-release',
+                'repo': 'kedaya0209/RocoMapTracker-sniffer'
+            },
+            'assets': assets
+        }
+
+        with open(os.path.join(pkg, 'metadata.json'), 'w') as fp:
+            json.dump(meta, fp, indent=2)
+        print('metadata.json generated')
+        "
+
+          echo "--- metadata.json ---"
+          cat "${PKG_DIR}/metadata.json"
+
+          # 打包 zip
+          zip -r "${ZIP_NAME}" "${PKG_DIR}/"
+          mv "${ZIP_NAME}" target/
+          echo "打包完成: target/${ZIP_NAME}"
 
       - name: Get previous release tag
         id: prev_tag
@@ -98,6 +181,8 @@ jobs:
       - name: Generate release notes
         shell: bash
         run: |
+          RAW="${{ github.event.inputs.version }}"
+          RAW="${RAW#v}"
           PREV_TAG="${{ steps.prev_tag.outputs.prev_tag }}"
           if [ -z "$PREV_TAG" ]; then
             echo "首次发版，使用全部 commit 日志" >&2
@@ -109,7 +194,8 @@ jobs:
             }
           fi
           echo "" >> releasenotes.md
-          echo "**SHA256**: 见附件 \`.sha256\` 文件" >> releasenotes.md
+          echo "### 下载说明" >> releasenotes.md
+          echo "- \`sniffer-v${RAW}.zip\` — 插件包（exe + rmt.db + metadata.json），解压到 plugins/ 目录使用" >> releasenotes.md
 
       - name: Cleanup existing release and tag
         continue-on-error: true
@@ -128,23 +214,25 @@ jobs:
         run: |
           RAW="${{ github.event.inputs.version }}"
           RAW="${RAW#v}"
-          TAG="v$RAW"
-          cd target
-          JAR=$(ls RocoMapTracker-sniffer-*.jar 2>/dev/null | head -1)
-          EXE=RocoMapTracker-sniffer.exe
-          JAR_SHA256="${JAR}.sha256"
-          EXE_SHA256="${EXE}.sha256"
+          VER="$RAW"
+          TAG="v${VER}"
+          ZIP_NAME="sniffer-v${VER}.zip"
 
           ASSETS=()
-          [ -f "$JAR" ] && ASSETS+=("../target/$JAR")
-          [ -f "$EXE" ] && ASSETS+=("../target/$EXE")
-          [ -f "$JAR_SHA256" ] && ASSETS+=("../target/$JAR_SHA256")
-          [ -f "$EXE_SHA256" ] && ASSETS+=("../target/$EXE_SHA256")
+          # 主产物：插件 zip
+          if [ -f "target/${ZIP_NAME}" ]; then
+            ASSETS+=("target/${ZIP_NAME}")
+          fi
+          # 辅助产物：fat jar
+          JAR=$(ls target/RocoMapTracker-sniffer-*.jar 2>/dev/null | head -1)
+          if [ -f "$JAR" ]; then
+            ASSETS+=("$JAR")
+          fi
 
           echo "Uploading assets: ${ASSETS[*]}"
           gh release create "$TAG" \
             "${ASSETS[@]}" \
             --title "$TAG" \
-            --notes-file ../releasenotes.md
+            --notes-file releasenotes.md
         env:
           GH_TOKEN: ${{ github.token }}
