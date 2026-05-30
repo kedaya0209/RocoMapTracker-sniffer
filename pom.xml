@@ -28,14 +28,6 @@
         <native-maven-plugin.version>0.10.4</native-maven-plugin.version>
     </properties>
 
-    <repositories>
-        <repository>
-            <id>github</id>
-            <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/kedaya0209/RocoMapTracker</url>
-        </repository>
-    </repositories>
-
     <dependencies>
         <!-- pcap4j for reading pcap files -->
         <dependency>

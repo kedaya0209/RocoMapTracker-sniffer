@@ -1,5 +1,8 @@
 name: Build RocoMapTracker-sniffer
 
+env:
+  ROCO_COMMON_REF: dev-2.0
+
 on:
   push:
     branches: [main]
@@ -17,8 +20,15 @@ jobs:
     name: Build fat jar
     runs-on: windows-latest
     steps:
-      - name: Checkout
+      - name: Checkout sniffer
         uses: actions/checkout@v4
+
+      - name: Checkout RocoMapTracker (roco-common source)
+        uses: actions/checkout@v4
+        with:
+          repository: kedaya0209/RocoMapTracker
+          ref: ${{ env.ROCO_COMMON_REF }}
+          path: RocoMapTracker
 
       - name: Setup GraalVM JDK 25
         uses: actions/setup-java@v4
@@ -29,7 +39,11 @@ jobs:
       - name: Setup Visual Studio (rc.exe)
         uses: ilammy/msvc-dev-cmd@v1
 
-      - name: Build with Maven
+      - name: Install roco-common to local repo
+        working-directory: RocoMapTracker
+        run: mvn install -pl roco-common -am -DskipTests -B
+
+      - name: Build sniffer with Maven
         run: mvn clean package -DskipTests -B
 
       - name: Upload fat jar
@@ -44,8 +58,15 @@ jobs:
     if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
     runs-on: windows-latest
     steps:
-      - name: Checkout
+      - name: Checkout sniffer
         uses: actions/checkout@v4
+
+      - name: Checkout RocoMapTracker (roco-common source)
+        uses: actions/checkout@v4
+        with:
+          repository: kedaya0209/RocoMapTracker
+          ref: ${{ env.ROCO_COMMON_REF }}
+          path: RocoMapTracker
 
       - name: Setup GraalVM JDK 25
         uses: actions/setup-java@v4
@@ -55,6 +76,10 @@ jobs:
 
       - name: Setup Visual Studio (rc.exe + linker)
         uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Install roco-common to local repo
+        working-directory: RocoMapTracker
+        run: mvn install -pl roco-common -am -DskipTests -B
 
       - name: Build native image
         run: mvn native:compile -DskipTests -B
