@@ -1,5 +1,6 @@
 target/
-/data/
+/data/icons/
+rmt.db
 src/main/proto/
 *.class
 *.jar
