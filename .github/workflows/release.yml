@@ -1,0 +1,170 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag (e.g. v1.0.0)'
+        required: true
+        default: 'v1.0.0'
+
+jobs:
+  build-jar:
+    name: Build fat jar
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup GraalVM JDK 25
+        uses: actions/setup-java@v4
+        with:
+          java-version: 25
+          distribution: graalvm
+
+      - name: Create Maven settings.xml for GitHub Packages
+        shell: bash
+        run: |
+          mkdir -p ~/.m2
+          cat > ~/.m2/settings.xml << EOF
+          <settings>
+            <servers>
+              <server>
+                <id>github</id>
+                <username>${{ secrets.GH_PACKAGES_USER }}</username>
+                <password>${{ secrets.GH_PACKAGES_TOKEN }}</password>
+              </server>
+            </servers>
+          </settings>
+          EOF
+
+      - name: Install parent POM stub (roco-map-tracker)
+        shell: bash
+        run: |
+          cat > /tmp/roco-map-tracker-1.2.0.pom << 'POMEOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <project xmlns="http://maven.apache.org/POM/4.0.0"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+              <modelVersion>4.0.0</modelVersion>
+              <groupId>io.github.kedaya0209</groupId>
+              <artifactId>roco-map-tracker</artifactId>
+              <version>1.2.0</version>
+              <packaging>pom</packaging>
+          </project>
+          POMEOF
+          mvn install:install-file \
+            -Dfile=/tmp/roco-map-tracker-1.2.0.pom \
+            -DgroupId=io.github.kedaya0209 \
+            -DartifactId=roco-map-tracker \
+            -Dversion=1.2.0 \
+            -Dpackaging=pom -B
+
+      - name: Setup Visual Studio (rc.exe)
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Build fat jar
+        run: mvn clean package -DskipTests -B
+
+      - name: Upload fat jar as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: RocoMapTracker-sniffer-jar
+          path: target/RocoMapTracker-sniffer-*.jar
+          compression-level: 0
+
+  native-image:
+    name: Build native image
+    runs-on: windows-latest
+    needs: build-jar
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup GraalVM JDK 25
+        uses: actions/setup-java@v4
+        with:
+          java-version: 25
+          distribution: graalvm
+
+      - name: Create Maven settings.xml for GitHub Packages
+        shell: bash
+        run: |
+          mkdir -p ~/.m2
+          cat > ~/.m2/settings.xml << EOF
+          <settings>
+            <servers>
+              <server>
+                <id>github</id>
+                <username>${{ secrets.GH_PACKAGES_USER }}</username>
+                <password>${{ secrets.GH_PACKAGES_TOKEN }}</password>
+              </server>
+            </servers>
+          </settings>
+          EOF
+
+      - name: Install parent POM stub (roco-map-tracker)
+        shell: bash
+        run: |
+          cat > /tmp/roco-map-tracker-1.2.0.pom << 'POMEOF'
+          <?xml version="1.0" encoding="UTF-8"?>
+          <project xmlns="http://maven.apache.org/POM/4.0.0"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+              <modelVersion>4.0.0</modelVersion>
+              <groupId>io.github.kedaya0209</groupId>
+              <artifactId>roco-map-tracker</artifactId>
+              <version>1.2.0</version>
+              <packaging>pom</packaging>
+          </project>
+          POMEOF
+          mvn install:install-file \
+            -Dfile=/tmp/roco-map-tracker-1.2.0.pom \
+            -DgroupId=io.github.kedaya0209 \
+            -DartifactId=roco-map-tracker \
+            -Dversion=1.2.0 \
+            -Dpackaging=pom -B
+
+      - name: Setup Visual Studio (rc.exe + linker)
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Build native image
+        run: mvn native:compile -DskipTests -B -V
+
+      - name: Upload native image as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: RocoMapTracker-sniffer-exe
+          path: target/RocoMapTracker-sniffer.exe
+          compression-level: 0
+
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [build-jar, native-image]
+    permissions:
+      contents: write
+    steps:
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Create release (manual trigger)
+        if: github.event_name == 'workflow_dispatch'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ inputs.tag }}
+          name: ${{ inputs.tag }}
+          draft: true
+          files: |
+            RocoMapTracker-sniffer-jar/*.jar
+            RocoMapTracker-sniffer-exe/*.exe
+
+      - name: Upload to existing release
+        if: github.event_name == 'release'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            RocoMapTracker-sniffer-jar/*.jar
+            RocoMapTracker-sniffer-exe/*.exe
