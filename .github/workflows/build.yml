@@ -26,24 +26,6 @@ jobs:
           java-version: 25
           distribution: graalvm
 
-      - name: Configure Maven for GitHub Packages
-        shell: bash
-        run: |
-          mkdir -p ~/.m2
-          echo '<?xml version="1.0" encoding="UTF-8"?>' > ~/.m2/settings.xml
-          echo '<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"' >> ~/.m2/settings.xml
-          echo '  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"' >> ~/.m2/settings.xml
-          echo '  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">' >> ~/.m2/settings.xml
-          echo '  <servers>' >> ~/.m2/settings.xml
-          echo '    <server>' >> ~/.m2/settings.xml
-          echo '      <id>github</id>' >> ~/.m2/settings.xml
-          echo "      <username>kedaya0209</username>" >> ~/.m2/settings.xml
-          echo "      <password>${{ secrets.GH_PACKAGES_TOKEN }}</password>" >> ~/.m2/settings.xml
-          echo '    </server>' >> ~/.m2/settings.xml
-          echo '  </servers>' >> ~/.m2/settings.xml
-          echo '</settings>' >> ~/.m2/settings.xml
-          cat ~/.m2/settings.xml
-
       - name: Checkout RocoMapTracker (build roco-common from source)
         uses: actions/checkout@v4
         with:
@@ -85,24 +67,6 @@ jobs:
         with:
           java-version: 25
           distribution: graalvm
-
-      - name: Configure Maven for GitHub Packages
-        shell: bash
-        run: |
-          mkdir -p ~/.m2
-          echo '<?xml version="1.0" encoding="UTF-8"?>' > ~/.m2/settings.xml
-          echo '<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"' >> ~/.m2/settings.xml
-          echo '  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"' >> ~/.m2/settings.xml
-          echo '  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">' >> ~/.m2/settings.xml
-          echo '  <servers>' >> ~/.m2/settings.xml
-          echo '    <server>' >> ~/.m2/settings.xml
-          echo '      <id>github</id>' >> ~/.m2/settings.xml
-          echo "      <username>kedaya0209</username>" >> ~/.m2/settings.xml
-          echo "      <password>${{ secrets.GH_PACKAGES_TOKEN }}</password>" >> ~/.m2/settings.xml
-          echo '    </server>' >> ~/.m2/settings.xml
-          echo '  </servers>' >> ~/.m2/settings.xml
-          echo '</settings>' >> ~/.m2/settings.xml
-          cat ~/.m2/settings.xml
 
       - name: Checkout RocoMapTracker (build roco-common from source)
         uses: actions/checkout@v4
