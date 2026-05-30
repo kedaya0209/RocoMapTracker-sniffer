@@ -16,7 +16,7 @@
         <!-- dependency versions -->
         <pcap4j.version>1.8.2</pcap4j.version>
         <jna.version>5.18.1</jna.version>
-        <roco-common.version>main-SNAPSHOT</roco-common.version>
+        <roco-common.version>1.2.0</roco-common.version>
         <sqlite-jdbc.version>3.53.1.0</sqlite-jdbc.version>
         <lombok.version>1.18.46</lombok.version>
         <slf4j.version>2.0.16</slf4j.version>
@@ -30,8 +30,9 @@
 
     <repositories>
         <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/kedaya0209/RocoMapTracker</url>
         </repository>
     </repositories>
 
@@ -81,9 +82,9 @@
             <version>${logback.version}</version>
         </dependency>
         
-        <!-- RocoMapTracker common utilities (via JitPack) -->
+        <!-- RocoMapTracker common utilities -->
         <dependency>
-            <groupId>com.github.kedaya0209.RocoMapTracker</groupId>
+            <groupId>io.github.kedaya0209</groupId>
             <artifactId>roco-common</artifactId>
             <version>${roco-common.version}</version>
         </dependency>

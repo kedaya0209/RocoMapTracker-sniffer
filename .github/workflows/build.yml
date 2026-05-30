@@ -26,6 +26,22 @@ jobs:
           java-version: 25
           distribution: graalvm
 
+      - name: Build and install roco-common from source
+        shell: bash
+        run: |
+          # 用 actions/checkout 克隆 RocoMapTracker
+          git clone --depth 1 https://github.com/kedaya0209/RocoMapTracker.git RocoMapTracker
+          # 安装父 POM（roco-map-tracker）到本地仓库
+          mvn install:install-file \
+            -Dfile=RocoMapTracker/pom.xml \
+            -DgroupId=io.github.kedaya0209 \
+            -DartifactId=roco-map-tracker \
+            -Dversion=1.2.0 \
+            -Dpackaging=pom -B
+          # 从源码构建并安装 roco-common
+          mvn install -f RocoMapTracker/pom.xml -pl roco-common -am -DskipTests -B
+          echo "=== roco-common installed ==="
+
       - name: Setup Visual Studio (rc.exe)
         uses: ilammy/msvc-dev-cmd@v1
 
@@ -52,6 +68,19 @@ jobs:
         with:
           java-version: 25
           distribution: graalvm
+
+      - name: Build and install roco-common from source
+        shell: bash
+        run: |
+          git clone --depth 1 https://github.com/kedaya0209/RocoMapTracker.git RocoMapTracker
+          mvn install:install-file \
+            -Dfile=RocoMapTracker/pom.xml \
+            -DgroupId=io.github.kedaya0209 \
+            -DartifactId=roco-map-tracker \
+            -Dversion=1.2.0 \
+            -Dpackaging=pom -B
+          mvn install -f RocoMapTracker/pom.xml -pl roco-common -am -DskipTests -B
+          echo "=== roco-common installed ==="
 
       - name: Setup Visual Studio (rc.exe + linker)
         uses: ilammy/msvc-dev-cmd@v1
