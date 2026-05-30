@@ -123,6 +123,7 @@ jobs:
 
           # 复制图标
           if [ -f src/main/resources/icon/rmt.svg ]; then
+            mkdir -p "${PKG_DIR}/icon/"
             cp src/main/resources/icon/rmt.svg "${PKG_DIR}/icon/"
           fi
 
