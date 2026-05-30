@@ -25,26 +25,25 @@ jobs:
         with:
           java-version: 25
           distribution: graalvm
-          # 不再使用 server-id 等参数，改用手动 settings.xml 避免认证失效
 
       - name: Create Maven settings.xml for GitHub Packages
         shell: bash
         run: |
           mkdir -p ~/.m2
-          cat > ~/.m2/settings.xml << 'EOF'
+          cat > ~/.m2/settings.xml << EOF
           <settings>
             <servers>
               <server>
                 <id>github</id>
-                <username>${env.GH_USER}</username>
-                <password>${env.GH_TOKEN}</password>
+                <username>${{ secrets.GH_PACKAGES_USER }}</username>
+                <password>${{ secrets.GH_PACKAGES_TOKEN }}</password>
               </server>
             </servers>
           </settings>
           EOF
-        env:
-          GH_USER: ${{ secrets.GH_PACKAGES_USER }}
-          GH_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
+          # 打印内容（隐藏密码）用于调试
+          echo "=== settings.xml ==="
+          sed 's/<password>.*<\/password>/<password>***<\/password>/' ~/.m2/settings.xml
 
       - name: Setup Visual Studio (rc.exe)
         uses: ilammy/msvc-dev-cmd@v1
@@ -77,20 +76,19 @@ jobs:
         shell: bash
         run: |
           mkdir -p ~/.m2
-          cat > ~/.m2/settings.xml << 'EOF'
+          cat > ~/.m2/settings.xml << EOF
           <settings>
             <servers>
               <server>
                 <id>github</id>
-                <username>${env.GH_USER}</username>
-                <password>${env.GH_TOKEN}</password>
+                <username>${{ secrets.GH_PACKAGES_USER }}</username>
+                <password>${{ secrets.GH_PACKAGES_TOKEN }}</password>
               </server>
             </servers>
           </settings>
           EOF
-        env:
-          GH_USER: ${{ secrets.GH_PACKAGES_USER }}
-          GH_TOKEN: ${{ secrets.GH_PACKAGES_TOKEN }}
+          echo "=== settings.xml ==="
+          sed 's/<password>.*<\/password>/<password>***<\/password>/' ~/.m2/settings.xml
 
       - name: Setup Visual Studio (rc.exe + linker)
         uses: ilammy/msvc-dev-cmd@v1
