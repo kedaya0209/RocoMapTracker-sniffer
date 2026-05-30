@@ -151,19 +151,30 @@ jobs:
 
       - uses: actions/download-artifact@v4
 
+      - name: Debug artifacts
+        shell: bash
+        run: |
+          echo "Event: ${{ github.event_name }}"
+          echo "PWD: $(pwd)"
+          find . -name "*.jar" -o -name "*.exe" 2>/dev/null || echo "No artifacts found"
+
       - name: Create release (manual trigger)
         if: github.event_name == 'workflow_dispatch'
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
+          set -x
           TAG="${{ inputs.tag }}"
+          JAR=$(ls RocoMapTracker-sniffer-jar/RocoMapTracker-sniffer-*.jar 2>/dev/null | head -1)
+          EXE=RocoMapTracker-sniffer-exe/RocoMapTracker-sniffer.exe
+          echo "JAR: $JAR, EXE exists: $([ -f "$EXE" ] && echo yes || echo no)"
           gh release create "$TAG" \
             --title "$TAG" \
             --draft \
             --generate-notes \
-            RocoMapTracker-sniffer-jar/RocoMapTracker-sniffer-*.jar \
-            RocoMapTracker-sniffer-exe/RocoMapTracker-sniffer.exe
+            "$JAR" \
+            "$EXE"
 
       - name: Upload assets to existing release
         if: github.event_name == 'release'
@@ -171,7 +182,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
+          set -x
           TAG="${{ github.event.release.tag_name }}"
-          gh release upload "$TAG" \
-            RocoMapTracker-sniffer-jar/RocoMapTracker-sniffer-*.jar \
-            RocoMapTracker-sniffer-exe/RocoMapTracker-sniffer.exe
+          JAR=$(ls RocoMapTracker-sniffer-jar/RocoMapTracker-sniffer-*.jar 2>/dev/null | head -1)
+          EXE=RocoMapTracker-sniffer-exe/RocoMapTracker-sniffer.exe
+          gh release upload "$TAG" "$JAR" "$EXE"
