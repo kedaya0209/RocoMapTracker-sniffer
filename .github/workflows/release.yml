@@ -121,6 +121,11 @@ jobs:
             cp target/rmt.db "${PKG_DIR}/"
           fi
 
+          # 复制图标
+          if [ -f src/main/resources/icon.svg ]; then
+            cp src/main/resources/icon.svg "${PKG_DIR}/"
+          fi
+
           # 生成 metadata.json
           python scripts/gen_metadata.py "${VER}" "${PKG_DIR}"
 
