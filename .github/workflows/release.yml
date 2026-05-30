@@ -147,24 +147,29 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Download all artifacts
-        uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v4
 
       - name: Create release (manual trigger)
         if: github.event_name == 'workflow_dispatch'
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ inputs.tag }}
-          name: ${{ inputs.tag }}
-          draft: true
-          files: |
-            RocoMapTracker-sniffer-jar/*.jar
-            RocoMapTracker-sniffer-exe/*.exe
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          TAG="${{ inputs.tag }}"
+          gh release create "$TAG" \
+            --title "$TAG" \
+            --draft \
+            --generate-notes \
+            RocoMapTracker-sniffer-jar/RocoMapTracker-sniffer-*.jar \
+            RocoMapTracker-sniffer-exe/RocoMapTracker-sniffer.exe
 
-      - name: Upload to existing release
+      - name: Upload assets to existing release
         if: github.event_name == 'release'
-        uses: softprops/action-gh-release@v2
-        with:
-          files: |
-            RocoMapTracker-sniffer-jar/*.jar
-            RocoMapTracker-sniffer-exe/*.exe
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          TAG="${{ github.event.release.tag_name }}"
+          gh release upload "$TAG" \
+            RocoMapTracker-sniffer-jar/RocoMapTracker-sniffer-*.jar \
+            RocoMapTracker-sniffer-exe/RocoMapTracker-sniffer.exe
