@@ -22,7 +22,7 @@ def sha256_file(path: str) -> str:
 
 def main():
     if len(sys.argv) < 3:
-        print("用法: python gen_metadata.py <版本号> <插件目录>", file=sys.stderr)
+        print("usage: python gen_metadata.py <version> <plugin_dir>", file=sys.stderr)
         sys.exit(1)
 
     version = sys.argv[1]
@@ -55,7 +55,7 @@ def main():
     out_path = os.path.join(pkg_dir, 'metadata.json')
     with open(out_path, 'w') as fp:
         json.dump(meta, fp, indent=2)
-    print(f'metadata.json 生成完成: {out_path}')
+    print(f'metadata.json generated: {out_path}')
     print(json.dumps(meta, indent=2))
 
 
