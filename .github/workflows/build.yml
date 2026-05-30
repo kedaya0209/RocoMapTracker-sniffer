@@ -26,21 +26,6 @@ jobs:
           java-version: 25
           distribution: graalvm
 
-      - name: Checkout RocoMapTracker (build roco-common from source)
-        uses: actions/checkout@v4
-        with:
-          repository: kedaya0209/RocoMapTracker
-          path: RocoMapTracker
-
-      - name: Install roco-common to local Maven repo from source
-        shell: bash
-        run: |
-          # 先安装根 POM（roco-map-tracker），-N = non-recursive
-          mvn install -f RocoMapTracker/pom.xml -N -DskipTests -q
-          # 再构建并安装 roco-common（含 a-m 自动解析父 POM）
-          mvn install -f RocoMapTracker/pom.xml -pl roco-common -am -DskipTests -q
-          echo "roco-common installed OK"
-
       - name: Setup Visual Studio (rc.exe)
         uses: ilammy/msvc-dev-cmd@v1
 
@@ -67,21 +52,6 @@ jobs:
         with:
           java-version: 25
           distribution: graalvm
-
-      - name: Checkout RocoMapTracker (build roco-common from source)
-        uses: actions/checkout@v4
-        with:
-          repository: kedaya0209/RocoMapTracker
-          path: RocoMapTracker
-
-      - name: Install roco-common to local Maven repo from source
-        shell: bash
-        run: |
-          # 先安装根 POM（roco-map-tracker），-N = non-recursive
-          mvn install -f RocoMapTracker/pom.xml -N -DskipTests -q
-          # 再构建并安装 roco-common（含 a-m 自动解析父 POM）
-          mvn install -f RocoMapTracker/pom.xml -pl roco-common -am -DskipTests -q
-          echo "roco-common installed OK"
 
       - name: Setup Visual Studio (rc.exe + linker)
         uses: ilammy/msvc-dev-cmd@v1
