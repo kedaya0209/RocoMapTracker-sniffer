@@ -127,8 +127,8 @@ jobs:
           echo "--- metadata.json ---"
           cat "${PKG_DIR}/metadata.json"
 
-          # 打包 zip
-          zip -r "${ZIP_NAME}" "${PKG_DIR}/"
+          # 打包 zip (windows-latest 无 zip 命令，用 PowerShell Compress-Archive)
+          pwsh -Command "Compress-Archive -Path \"${PKG_DIR}/*\" -DestinationPath \"${ZIP_NAME}\""
           mv "${ZIP_NAME}" target/
           echo "打包完成: target/${ZIP_NAME}"
 
