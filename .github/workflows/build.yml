@@ -30,19 +30,26 @@ jobs:
         shell: bash
         run: |
           mkdir -p ~/.m2
-          cat > ~/.m2/settings.xml << SETTINGS
-          <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
-            <servers>
-              <server>
-                <id>github</id>
-                <username>kedaya0209</username>
-                <password>${{ secrets.GH_PACKAGES_TOKEN }}</password>
-              </server>
-            </servers>
-          </settings>
-          SETTINGS
+          echo '<?xml version="1.0" encoding="UTF-8"?>' > ~/.m2/settings.xml
+          echo '<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"' >> ~/.m2/settings.xml
+          echo '  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"' >> ~/.m2/settings.xml
+          echo '  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">' >> ~/.m2/settings.xml
+          echo '  <servers>' >> ~/.m2/settings.xml
+          echo '    <server>' >> ~/.m2/settings.xml
+          echo '      <id>github</id>' >> ~/.m2/settings.xml
+          echo "      <username>kedaya0209</username>" >> ~/.m2/settings.xml
+          echo "      <password>${{ secrets.GH_PACKAGES_TOKEN }}</password>" >> ~/.m2/settings.xml
+          echo '    </server>' >> ~/.m2/settings.xml
+          echo '  </servers>' >> ~/.m2/settings.xml
+          echo '</settings>' >> ~/.m2/settings.xml
+          cat ~/.m2/settings.xml
+
+      - name: Verify token against GitHub Packages
+        shell: bash
+        run: |
+          curl -v -u "kedaya0209:${{ secrets.GH_PACKAGES_TOKEN }}" \
+            "https://maven.pkg.github.com/kedaya0209/RocoMapTracker/io/github/kedaya0209/roco-common/1.2.0/roco-common-1.2.0.pom" \
+            -o /dev/null 2>&1 | head -30
 
       - name: Setup Visual Studio (rc.exe)
         uses: ilammy/msvc-dev-cmd@v1
@@ -75,25 +82,25 @@ jobs:
         shell: bash
         run: |
           mkdir -p ~/.m2
-          cat > ~/.m2/settings.xml << SETTINGS
-          <settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">
-            <servers>
-              <server>
-                <id>github</id>
-                <username>kedaya0209</username>
-                <password>${{ secrets.GH_PACKAGES_TOKEN }}</password>
-              </server>
-            </servers>
-          </settings>
-          SETTINGS
+          echo '<?xml version="1.0" encoding="UTF-8"?>' > ~/.m2/settings.xml
+          echo '<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"' >> ~/.m2/settings.xml
+          echo '  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"' >> ~/.m2/settings.xml
+          echo '  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 http://maven.apache.org/xsd/settings-1.0.0.xsd">' >> ~/.m2/settings.xml
+          echo '  <servers>' >> ~/.m2/settings.xml
+          echo '    <server>' >> ~/.m2/settings.xml
+          echo '      <id>github</id>' >> ~/.m2/settings.xml
+          echo "      <username>kedaya0209</username>" >> ~/.m2/settings.xml
+          echo "      <password>${{ secrets.GH_PACKAGES_TOKEN }}</password>" >> ~/.m2/settings.xml
+          echo '    </server>' >> ~/.m2/settings.xml
+          echo '  </servers>' >> ~/.m2/settings.xml
+          echo '</settings>' >> ~/.m2/settings.xml
+          cat ~/.m2/settings.xml
 
       - name: Setup Visual Studio (rc.exe + linker)
         uses: ilammy/msvc-dev-cmd@v1
 
       - name: Build native image
-        run: mvn native:compile -DskipTests -B
+        run: mvn native:compile -DskipTests -B -V
 
       - name: Upload native image
         uses: actions/upload-artifact@v4
