@@ -1,0 +1,88 @@
+name: Build RocoMapTracker-sniffer
+
+on:
+  push:
+    branches: [main]
+    paths-ignore:
+      - '**.md'
+      - '.gitignore'
+  pull_request:
+    branches: [main]
+  release:
+    types: [published]
+  workflow_dispatch:
+
+jobs:
+  build-jar:
+    name: Build fat jar
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup GraalVM JDK 25
+        uses: actions/setup-java@v4
+        with:
+          java-version: 25
+          distribution: graalvm
+
+      - name: Setup Visual Studio (rc.exe)
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Build with Maven
+        run: mvn clean package -DskipTests -B
+
+      - name: Upload fat jar
+        uses: actions/upload-artifact@v4
+        with:
+          name: RocoMapTracker-sniffer-jar
+          path: target/RocoMapTracker-sniffer-*.jar
+          compression-level: 0
+
+  native-image:
+    name: Build native image
+    if: github.event_name == 'release' || github.event_name == 'workflow_dispatch'
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup GraalVM JDK 25
+        uses: actions/setup-java@v4
+        with:
+          java-version: 25
+          distribution: graalvm
+
+      - name: Setup Visual Studio (rc.exe + linker)
+        uses: ilammy/msvc-dev-cmd@v1
+
+      - name: Build native image
+        run: mvn native:compile -DskipTests -B
+
+      - name: Upload native image
+        uses: actions/upload-artifact@v4
+        with:
+          name: RocoMapTracker-sniffer.exe
+          path: target/RocoMapTracker-sniffer.exe
+          compression-level: 0
+
+      - name: Upload native image to release
+        if: github.event_name == 'release'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+            const exePath = path.join(process.env.GITHUB_WORKSPACE, 'target', 'RocoMapTracker-sniffer.exe');
+            if (!fs.existsSync(exePath)) {
+              core.error('Native image not found at ' + exePath);
+              process.exit(1);
+            }
+            const asset = await github.rest.repos.uploadReleaseAsset({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              release_id: context.payload.release.id,
+              name: 'RocoMapTracker-sniffer.exe',
+              data: fs.readFileSync(exePath),
+            });
+            core.info('Uploaded asset: ' + asset.data.name);
