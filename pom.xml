@@ -1,10 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.roco</groupId>
+    <groupId>io.github.kedaya0209</groupId>
     <artifactId>RocoMapTracker-sniffer</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
@@ -76,7 +76,7 @@
         
         <!-- RocoMapTracker common utilities -->
         <dependency>
-            <groupId>com.luoke</groupId>
+            <groupId>io.github.kedaya0209</groupId>
             <artifactId>roco-common</artifactId>
             <version>${roco-common.version}</version>
         </dependency>
@@ -133,7 +133,7 @@
                         <configuration>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>com.roco.sniffer.Main</mainClass>
+                                    <mainClass>io.github.kedaya0209.roco.sniffer.Main</mainClass>
                                 </transformer>
                             </transformers>
                             <filters>
@@ -151,11 +151,32 @@
                 </executions>
             </plugin>
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.3.0</version>
+                <executions>
+                    <execution>
+                        <id>compile-icon-resource</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>${project.basedir}/compile_icon.bat</executable>
+                            <arguments>
+                                <argument>${project.build.directory}/rmt.res</argument>
+                                <argument>${project.basedir}/src/main/resources/icon/rmt.rc</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.graalvm.buildtools</groupId>
                 <artifactId>native-maven-plugin</artifactId>
                 <version>${native-maven-plugin.version}</version>
                 <configuration>
-                    <mainClass>com.roco.sniffer.Main</mainClass>
+                    <mainClass>io.github.kedaya0209.roco.sniffer.Main</mainClass>
                     <imageName>RocoMapTracker-sniffer</imageName>
                     <buildArgs>
                         <buildArg>--enable-native-access=ALL-UNNAMED</buildArg>
@@ -166,6 +187,7 @@
                         <buildArg>-H:-SpawnIsolates</buildArg>
                         <buildArg>-Os</buildArg>
                         <buildArg>--no-fallback</buildArg>
+                        <buildArg>-H:NativeLinkerOption=${project.build.directory}/rmt.res</buildArg>
                         <buildArg>-Dfile.encoding=UTF-8</buildArg>
                     </buildArgs>
                 </configuration>

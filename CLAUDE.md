@@ -40,7 +40,7 @@ mvn native:compile -q
 - 安装 native-image 工具：`gu install native-image`（GraalVM JDK 17+ 通常已内置）
 - Windows 需要 Visual Studio Build Tools（C++ 编译工具链）
 - `native:compile` 首次编译较慢（3-5 分钟），后续增量编译更快
-- Native image 配置：`src/main/resources/META-INF/native-image/com.roco/RocoMapTracker-sniffer/reachability-metadata.json`
+- Native image 配置：`src/main/resources/META-INF/native-image/reachability-metadata.json`
   - 由 `native-image-agent` 自动生成，包含反射/资源/JNI 注册
   - 重新生成：`java -agentlib:native-image-agent=config-output-dir=... -jar target/RocoMapTracker-sniffer-1.0-SNAPSHOT.jar <端口>`
 
@@ -190,6 +190,6 @@ RocoMapTracker-sniffer/
     │           └── ...
     └── resources/
         ├── logback.xml            # 日志配置
-        └── META-INF/native-image/com.roco/RocoMapTracker-sniffer/
+        └── META-INF/native-image/
             └── reachability-metadata.json  # GraalVM native image 元数据（agent 自动生成）
 ```

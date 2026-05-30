@@ -6,9 +6,9 @@
         </encoder>
     </appender>
 
-    <logger name="com.roco.sniffer" level="INFO"/>
+    <logger name="io.github.kedaya0209.roco.sniffer" level="INFO"/>
 
-    <root level="WARN">
+    <root level="INFO">
         <appender-ref ref="STDOUT"/>
     </root>
 </configuration>
