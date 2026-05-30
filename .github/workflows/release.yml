@@ -75,16 +75,6 @@ jobs:
       - name: Build native image
         run: mvn native:compile -DskipTests -B -V
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.x'
-
-      - name: Build rmt.db
-        shell: bash
-        run: |
-          python build_db.py
-
       - name: Generate SHA256 checksums
         shell: bash
         run: |
@@ -95,11 +85,6 @@ jobs:
               echo "$f.sha256 generated"
             fi
           done
-          cd ..
-          if [ -f rmt.db ]; then
-            sha256sum rmt.db > target/rmt.db.sha256
-            echo "rmt.db.sha256 generated"
-          fi
 
       - name: Get previous release tag
         id: prev_tag
@@ -125,11 +110,6 @@ jobs:
           fi
           echo "" >> releasenotes.md
           echo "**SHA256**: 见附件 \`.sha256\` 文件" >> releasenotes.md
-          echo "" >> releasenotes.md
-          echo "### 包含文件" >> releasenotes.md
-          echo "- \`RocoMapTracker-sniffer.jar\` — fat jar" >> releasenotes.md
-          echo "- \`RocoMapTracker-sniffer.exe\` — Windows native image" >> releasenotes.md
-          echo "- \`rmt.db\` — 游戏数据 SQLite 数据库" >> releasenotes.md
 
       - name: Cleanup existing release and tag
         continue-on-error: true
@@ -152,18 +132,14 @@ jobs:
           cd target
           JAR=$(ls RocoMapTracker-sniffer-*.jar 2>/dev/null | head -1)
           EXE=RocoMapTracker-sniffer.exe
-          DB=../rmt.db
           JAR_SHA256="${JAR}.sha256"
           EXE_SHA256="${EXE}.sha256"
-          DB_SHA256="rmt.db.sha256"
 
           ASSETS=()
           [ -f "$JAR" ] && ASSETS+=("../target/$JAR")
           [ -f "$EXE" ] && ASSETS+=("../target/$EXE")
-          [ -f "$DB" ] && ASSETS+=("$DB")
           [ -f "$JAR_SHA256" ] && ASSETS+=("../target/$JAR_SHA256")
           [ -f "$EXE_SHA256" ] && ASSETS+=("../target/$EXE_SHA256")
-          [ -f "../target/$DB_SHA256" ] && ASSETS+=("../target/$DB_SHA256")
 
           echo "Uploading assets: ${ASSETS[*]}"
           gh release create "$TAG" \
